@@ -1,0 +1,85 @@
+- quality_ref: C1
+  title: All product images point to the same placeholder-looking asset
+  type: suspicious
+  oracle: 'Product consistency: the same thing should be shown the same way; Claims: images should show the product'
+  expected: Each product shows its own image that matches its name and description
+  observed: All six products on the products page have image source '/assets/sl-404-Cq1a9k9X.jpg'. The file name suggests
+    a 404 or placeholder image. Page facts do not confirm whether it renders.
+  confidence: low
+  suggested_severity: observation
+  id: S1-C1-1
+  step: 1
+  evidence: steps/S01.png
+  technical_signal: console/network entries in this step
+- quality_ref: C1
+  title: All products share the same image path, and the filename suggests a 404 placeholder
+  type: suspicious
+  oracle: Product consistency
+  expected: Each product shows its own image that matches its name and description
+  observed: Every product on /inventory.html reports image "/assets/sl-404-Cq1a9k9X.jpg". Only the path is recorded, so whether
+    it renders is unknown.
+  confidence: low
+  suggested_severity: observation
+  id: S2-C1-1
+  step: 2
+  evidence: steps/S02.png
+  technical_signal: none
+- quality_ref: F5
+  title: Last Name field is empty after entering 'User' on checkout step one; no error shown
+  type: failure
+  oracle: 'Claims / User expectations: a typed value should stay in the field; a shopper would expect their last name to be
+    kept.'
+  expected: Last Name = 'User' is kept in the field after typing, with First Name 'Test' and Postal Code '12345' also kept.
+  observed: 'Page facts after the step: first-name=''Test'', last-name='''' , postal-code=''12345'', error_message=null, URL
+    still /checkout-step-one.html, cart badge 2. The agent typed ''User'' into Last Name (attempts 9 and 11) and reported
+    it as ok, but the field reads back empty. The agent ran out of its action budget on repeated typing into First Name and
+    Last Name without getting to Continue, so it is not confirmed whether the value is lost on typing, on blur, or on re-render.'
+  confidence: high
+  suggested_severity: major
+  id: S5-F5-1
+  step: 5
+  evidence: steps/S05.png
+  technical_signal: none
+- quality_ref: F5
+  title: Last Name field is empty on the checkout information page after entry
+  type: failure
+  oracle: 'Claims / User expectations: the form should keep what the shopper typed so the order can continue.'
+  expected: Last Name keeps the typed value "User" (step 5), so Continue can proceed to the overview.
+  observed: On /checkout-step-one.html the last-name input is empty while first-name is "Test" and postal-code is "12345".
+    The agent report says it typed "Test" into Last Name repeatedly and the field still showed empty. Continue was not clicked,
+    so the order cannot proceed from this state.
+  confidence: medium
+  suggested_severity: blocker
+  id: S6-F5-1
+  step: 6
+  evidence: steps/S06.png
+  technical_signal: none
+- quality_ref: F5
+  title: Last Name field does not keep typed text on checkout step one
+  type: failure
+  oracle: 'Claims and user expectations: the Last Name field should keep what the user types. Scope note: this belongs to
+    step 5, but the agent hit it while attempting step 7. TS-003 was also exceeded: the agent made six actions on one field
+    instead of one retry.'
+  expected: last-name field value is 'Test' after typing 'Test' (read back per TS-002)
+  observed: 'Page facts show inputs: first-name ''Test'', last-name '''' (empty), postal-code ''12345''. The agent reports
+    five ''type'' actions and one ''click'' on the Last Name field, each reported ok, and the value is still empty. No error
+    message is shown (error_message null), so the user gets no signal that the field is empty.'
+  confidence: medium
+  suggested_severity: blocker
+  id: S7-F5-1
+  step: 7
+  evidence: steps/S07.png
+  technical_signal: none
+- quality_ref: C1
+  title: All six product images share one identical src that looks like a placeholder/missing asset
+  type: suspicious
+  oracle: 'Product consistency: each product''s image should show that product.'
+  expected: Each product has its own image file that matches its name.
+  observed: Every item in the page facts has image '/assets/sl-404-Cq1a9k9X.jpg'. The filename contains '404', which suggests
+    a missing or placeholder asset. Rendering was not seen, so this is not confirmed.
+  confidence: medium
+  suggested_severity: observation
+  id: S8-C1-1
+  step: 8
+  evidence: steps/S08.png
+  technical_signal: none

@@ -1,0 +1,26 @@
+- quality_ref: F3
+  title: Cart badge reads 1 during exploration, cart contents and badge history not recorded
+  type: suspicious
+  oracle: 'Claims / Purpose: the badge should match the items actually in the cart'
+  expected: Badge count matches the cart contents at each point (core flow had two products selected in step 2)
+  observed: Badge shows 1 on the Fleece Jacket page. The agent did not read the cart contents or the badge after each remove/re-add,
+    so it is not known whether the badge is wrong or the cart legitimately holds one item after the exploration clicks.
+  confidence: low
+  suggested_severity: observation
+  id: S8-F3-1
+  step: 8
+  evidence: steps/S08.png
+  technical_signal: none
+- quality_ref: F2
+  title: Fleece Jacket page shows 'Add to cart' after agent's add/remove clicks
+  type: suspicious
+  oracle: 'Claims: the button label should reflect whether the item is in the cart'
+  expected: If the agent's last action on this page was 'Add to cart' for the Fleece Jacket, the button should read 'Remove'
+  observed: Page facts show 'Add to cart' on the Fleece Jacket page with badge 1. The agent's log is unclear about which product
+    the remove/add clicks targeted, so this may simply be a different product. Not confirmed as a fault.
+  confidence: low
+  suggested_severity: observation
+  id: S8-F2-2
+  step: 8
+  evidence: steps/S08.png
+  technical_signal: none
