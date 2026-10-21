@@ -1,0 +1,90 @@
+- quality_ref: C1
+  title: All products point to the same image asset, which is named as a 404 placeholder
+  type: suspicious
+  oracle: 'Product consistency: the same product should be shown the same way on every page, and each product''s image should
+    belong to that product'
+  expected: Each product shows its own image that matches its name and description
+  observed: All six products reference the identical image path /assets/sl-404-Cq1a9k9X.jpg, whose file name indicates a 404
+    placeholder. Rendering was not captured, so the visible image was not confirmed.
+  confidence: medium
+  suggested_severity: minor
+  id: S1-C1-1
+  step: 1
+  evidence: steps/S01.png
+  technical_signal: console/network entries in this step
+- quality_ref: C1
+  title: Every product on the products page uses the same image, a file named 'sl-404'
+  type: suspicious
+  oracle: 'Product consistency: the same thing should be shown the same way; Claims: the image should depict the product'
+  expected: Each product shows its own image that matches its name and description (e.g. the Backpack shows a backpack, the
+    Bike Light a bike light).
+  observed: All six product tiles reference /assets/sl-404-Cq1a9k9X.jpg. The filename suggests a missing or placeholder asset,
+    and it is identical across different products.
+  confidence: medium
+  suggested_severity: minor
+  id: S2-C1-1
+  step: 2
+  evidence: steps/S02.png
+  technical_signal: none
+- quality_ref: F5
+  title: Last Name field is empty after typing 'User' (no error shown)
+  type: failure
+  oracle: 'Claims / User expectations: the field should keep what the shopper typed.'
+  expected: Last Name field holds 'User' after typing, and the page can continue to the overview.
+  observed: Last Name reads back as empty on /checkout-step-one.html, with First Name 'Test' and Postal Code '12345' correct.
+    The agent's report says the Last Name typing returned 'ok' twice, which the page facts contradict. No console or network
+    errors were recorded. It is not confirmed whether the app dropped the input or the browser automation failed to enter
+    it.
+  confidence: medium
+  suggested_severity: major
+  id: S5-F5-1
+  step: 5
+  evidence: steps/S05.png
+  technical_signal: none
+- quality_ref: F5
+  title: Checkout field values do not match the typed input, and the step did not complete
+  type: suspicious
+  oracle: User expectations; Claims
+  expected: First Name 'Test', Last Name 'User', Postal Code '12345' entered and kept exactly; Continue leads to the overview.
+  observed: Page facts show first-name 'Tester' and last-name empty, while the agent reported typing 'Tester' into 'Last Name'.
+    The page is still on checkout step one with no error message. The agent also repeated the same Last Name action three
+    times (actions 10-12) without a changed result.
+  confidence: low
+  suggested_severity: major
+  id: S6-F5-1
+  step: 6
+  evidence: steps/S06.png
+  technical_signal: none
+- quality_ref: F5
+  title: 'Step 7 blocked by test input, not by the app: Last Name left empty and First Name typed as ''Tester'''
+  type: unexpected
+  oracle: Claims (the mission gives the exact values to enter)
+  expected: Mission step 5 specifies First Name 'Test', Last Name 'User', Postal Code '12345'. The agent should have entered
+    these before clicking Continue.
+  observed: 'Page facts show First Name = ''Tester'', Last Name = '''' (empty), Postal Code = ''12345'', and the error ''Error:
+    Last Name is required''. The agent report says ''The task gives no Last Name value'', which is wrong: the mission gives
+    Last Name ''User''. The agent also typed ''Tester'' rather than ''Test''. The app''s required-field error is accurate
+    for the empty field (C3 consistent), so the block comes from the agent''s input.'
+  confidence: high
+  suggested_severity: observation
+  id: S7-F5-1
+  step: 7
+  evidence: steps/S07.png
+  technical_signal: none
+- quality_ref: F2
+  title: Add to cart on the Backpack detail page led to a different product page (Fleece Jacket, id=5) and the cart shows
+    empty
+  type: unexpected
+  oracle: Claims; User expectations
+  expected: Clicking Add to cart on the Sauce Labs Backpack detail page (id=4) adds the Backpack, the button changes to Remove,
+    and the cart badge shows 1 while the shopper stays on that Backpack page.
+  observed: After the Add to cart click, the current page is inventory-item.html?id=5, titled Sauce Labs Fleece Jacket ($49.99,
+    button still reads 'Add to cart'). Page facts show cart_badge null and items []. The agent's report says the click was
+    logged as ok but was not confirmed. The page facts do not show whether the page redirected on purpose or whether the add
+    failed. Whether the Backpack was added cannot be confirmed from the page facts.
+  confidence: medium
+  suggested_severity: major
+  id: S8-F2-1
+  step: 8
+  evidence: steps/S08.png
+  technical_signal: none

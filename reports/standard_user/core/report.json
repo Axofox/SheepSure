@@ -1,0 +1,845 @@
+{
+  "schema_version": 1,
+  "generated": "2026-10-21T20:30:50",
+  "account": "standard_user",
+  "mission": "core",
+  "model": "claude-haiku-5-5",
+  "runs": 3,
+  "verdict": "Inconclusive",
+  "runs_summary": [
+    {
+      "run": 1,
+      "outcome": "completed",
+      "seconds": 294,
+      "steps_passed": 2,
+      "steps_total": 8,
+      "findings": 1
+    },
+    {
+      "run": 2,
+      "outcome": "completed",
+      "seconds": 279,
+      "steps_passed": 4,
+      "steps_total": 8,
+      "findings": 1
+    },
+    {
+      "run": 3,
+      "outcome": "completed",
+      "seconds": 281,
+      "steps_passed": 2,
+      "steps_total": 8,
+      "findings": 0
+    }
+  ],
+  "checks": [
+    {
+      "step": 1,
+      "ref": "F1",
+      "expected": "Valid credentials log the user in and land on the products page",
+      "observed_per_run": [
+        "URL is https://www.saucedemo.com/inventory.html, visible text includes the 'Products' heading and six items with names, prices and 'Add to cart' buttons. Cart badge is null (empty cart).",
+        "Page URL is https://www.saucedemo.com/inventory.html, visible text includes the 'Products' heading and the sort dropdown, six product items are listed with Add to cart buttons, and the cart badge is null (empty cart). No error message is shown.",
+        "Page facts show url https://www.saucedemo.com/inventory.html, visible text 'Products' and the 'Swag Labs' header, and six product items with Add to cart buttons. Agent report says it used standard_user / secret_sauce, which matches the valid account in the mission."
+      ],
+      "result_per_run": [
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "across_runs": "confirmed pass",
+      "screenshots": [
+        "run-1/steps/S01.png",
+        "run-2/steps/S01.png",
+        "run-3/steps/S01.png"
+      ]
+    },
+    {
+      "step": 1,
+      "ref": "C1",
+      "expected": "A product's name, image, description and price match each other everywhere it appears",
+      "observed_per_run": [
+        "Each of the six product entries shows a name, a description and a price in the visible text (e.g. Sauce Labs Backpack $29.99, Sauce Labs Bike Light $9.99). Image file names match the product names (e.g. sauce-backpack, bike-light), but the image content was not read, and each product appears only on this page so far, so cross-page consistency cannot be judged yet.",
+        "",
+        ""
+      ],
+      "result_per_run": [
+        "unsure",
+        "not recorded",
+        "not recorded"
+      ],
+      "across_runs": "not verified",
+      "screenshots": [
+        "run-1/steps/S01.png",
+        "run-2/steps/S01.png",
+        "run-3/steps/S01.png"
+      ]
+    },
+    {
+      "step": 1,
+      "ref": "C5",
+      "expected": "No unexpected console errors or failed network requests",
+      "observed_per_run": [
+        "4 console entries, 4 failed requests to events.backtrace.io (third-party only, no visible problem by itself)",
+        "4 console entries, 4 failed requests to events.backtrace.io (third-party only, no visible problem by itself)",
+        "4 console entries, 4 failed requests to events.backtrace.io (third-party only, no visible problem by itself)"
+      ],
+      "result_per_run": [
+        "unsure",
+        "unsure",
+        "unsure"
+      ],
+      "across_runs": "not verified",
+      "screenshots": [
+        "run-1/steps/S01.png",
+        "run-2/steps/S01.png",
+        "run-3/steps/S01.png"
+      ]
+    },
+    {
+      "step": 2,
+      "ref": "F2",
+      "expected": "Add to cart on Sauce Labs Backpack and Sauce Labs Bike Light adds those products and their buttons change to Remove",
+      "observed_per_run": [
+        "Backpack ($29.99) and Bike Light ($9.99) both show a Remove button. The other four products still show Add to cart.",
+        "Page facts show Sauce Labs Backpack ($29.99) and Sauce Labs Bike Light ($9.99) both with button 'Remove'. The other four products still read 'Add to cart'.",
+        "Page facts show Sauce Labs Backpack ($29.99) and Sauce Labs Bike Light ($9.99) both with button 'Remove'. The other four products still read 'Add to cart'."
+      ],
+      "result_per_run": [
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "across_runs": "confirmed pass",
+      "screenshots": [
+        "run-1/steps/S02.png",
+        "run-2/steps/S02.png",
+        "run-3/steps/S02.png"
+      ]
+    },
+    {
+      "step": 2,
+      "ref": "F3",
+      "expected": "Cart badge count equals the number of items actually in the cart",
+      "observed_per_run": [
+        "Badge reads 2. Two items show Remove on the inventory page, which is consistent with 2. The cart page was not opened in this step, so the cart list itself was not read.",
+        "Cart badge reads '2'. Exactly two products show 'Remove' (Backpack and Bike Light), consistent with 2 items in the cart. The cart itself has not been opened in this step, so the contents are only inferred from the button states.",
+        "Cart badge reads '2'. Exactly two products show 'Remove' on the page (Backpack and Bike Light). The cart page itself was not opened in this step, so the badge is only compared with the inventory buttons."
+      ],
+      "result_per_run": [
+        "unsure",
+        "pass",
+        "pass"
+      ],
+      "across_runs": "not verified",
+      "screenshots": [
+        "run-1/steps/S02.png",
+        "run-2/steps/S02.png",
+        "run-3/steps/S02.png"
+      ]
+    },
+    {
+      "step": 2,
+      "ref": "C1",
+      "expected": "Product name, image, description and price match each other where the product appears",
+      "observed_per_run": [
+        "On the inventory page, Backpack and Bike Light each show a name, description, price and image path. No other page was read in this step, so there is nothing to compare them against yet.",
+        "Backpack: name 'Sauce Labs Backpack', price $29.99, image file 'sauce-backpack-...'. Bike Light: name 'Sauce Labs Bike Light', price $9.99, image file 'bike-light-...'. Prices match the agent report. Descriptions on this page match the product names.",
+        ""
+      ],
+      "result_per_run": [
+        "unsure",
+        "pass",
+        "not recorded"
+      ],
+      "across_runs": "not verified",
+      "screenshots": [
+        "run-1/steps/S02.png",
+        "run-2/steps/S02.png",
+        "run-3/steps/S02.png"
+      ]
+    },
+    {
+      "step": 2,
+      "ref": "C4",
+      "expected": "No layout breakage, overlapping elements or unreadable text on the inventory page",
+      "observed_per_run": [
+        "Visible text is in a normal order with no error message. The page facts contain no layout or visual data, so layout cannot be judged from them.",
+        "",
+        ""
+      ],
+      "result_per_run": [
+        "unsure",
+        "not recorded",
+        "not recorded"
+      ],
+      "across_runs": "not verified",
+      "screenshots": [
+        "run-1/steps/S02.png",
+        "run-2/steps/S02.png",
+        "run-3/steps/S02.png"
+      ]
+    },
+    {
+      "step": 2,
+      "ref": "C5",
+      "expected": "No unexpected console errors or failed network requests",
+      "observed_per_run": [
+        "0 console entries, 0 failed requests",
+        "0 console entries, 0 failed requests",
+        "0 console entries, 0 failed requests"
+      ],
+      "result_per_run": [
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "across_runs": "confirmed pass",
+      "screenshots": [
+        "run-1/steps/S02.png",
+        "run-2/steps/S02.png",
+        "run-3/steps/S02.png"
+      ]
+    },
+    {
+      "step": 3,
+      "ref": "F3",
+      "expected": "Cart badge count equals the number of items actually in the cart (2 items, badge 2)",
+      "observed_per_run": [
+        "Cart badge reads 2. Cart lists 2 items: Sauce Labs Backpack (qty 1) and Sauce Labs Bike Light (qty 1).",
+        "Cart badge reads \"2\"; the cart lists 2 items (Sauce Labs Backpack, qty 1; Sauce Labs Bike Light, qty 1)",
+        "cart_badge is \"2\"; the cart lists 2 items (Sauce Labs Backpack, Sauce Labs Bike Light), each quantity 1"
+      ],
+      "result_per_run": [
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "across_runs": "confirmed pass",
+      "screenshots": [
+        "run-1/steps/S03.png",
+        "run-2/steps/S03.png",
+        "run-3/steps/S03.png"
+      ]
+    },
+    {
+      "step": 3,
+      "ref": "F4",
+      "expected": "Cart contains exactly the selected products (Sauce Labs Backpack and Sauce Labs Bike Light) with correct names, prices and quantities",
+      "observed_per_run": [
+        "Cart shows exactly two items, Sauce Labs Backpack ($29.99, qty 1) and Sauce Labs Bike Light ($9.99, qty 1). Names and quantities match the mission. Prices are shown but were not compared to the products-page prices in this step's page facts, so the price match is not confirmed here.",
+        "Cart lists \"Sauce Labs Backpack\" at $29.99, qty 1, and \"Sauce Labs Bike Light\" at $9.99, qty 1. No other items shown. Both rows show a Remove button.",
+        "Items: Sauce Labs Backpack $29.99 qty 1 and Sauce Labs Bike Light $9.99 qty 1, both with Remove buttons. These are the two products the mission asked to add. The agent report matches the page facts."
+      ],
+      "result_per_run": [
+        "unsure",
+        "pass",
+        "pass"
+      ],
+      "across_runs": "not verified",
+      "screenshots": [
+        "run-1/steps/S03.png",
+        "run-2/steps/S03.png",
+        "run-3/steps/S03.png"
+      ]
+    },
+    {
+      "step": 3,
+      "ref": "C5",
+      "expected": "No unexpected console errors or failed network requests",
+      "observed_per_run": [
+        "0 console entries, 0 failed requests",
+        "0 console entries, 0 failed requests",
+        "0 console entries, 0 failed requests"
+      ],
+      "result_per_run": [
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "across_runs": "confirmed pass",
+      "screenshots": [
+        "run-1/steps/S03.png",
+        "run-2/steps/S03.png",
+        "run-3/steps/S03.png"
+      ]
+    },
+    {
+      "step": 3,
+      "ref": "C4",
+      "expected": "No layout breakage, overlapping elements, or unreadable text on the cart page",
+      "observed_per_run": [
+        "",
+        "Page text is fully readable and in order (header, quantity/description columns, prices, Remove buttons, Continue Shopping and Checkout buttons, footer). The page facts contain no layout or overlap measurements, so layout itself cannot be confirmed.",
+        "The visible text reads cleanly in order (title, quantities, names, descriptions, prices, buttons, footer). No layout information was captured, so overlap or breakage cannot be confirmed from these facts."
+      ],
+      "result_per_run": [
+        "not recorded",
+        "unsure",
+        "unsure"
+      ],
+      "across_runs": "not verified",
+      "screenshots": [
+        "run-1/steps/S03.png",
+        "run-2/steps/S03.png",
+        "run-3/steps/S03.png"
+      ]
+    },
+    {
+      "step": 3,
+      "ref": "C1",
+      "expected": "Product name, image, description and price match wherever the product appears",
+      "observed_per_run": [
+        "",
+        "",
+        "Names and prices are shown in the cart. Image is null in the page facts, so the image was not captured and cannot be compared. No products-page facts are available in this step to compare descriptions or prices against."
+      ],
+      "result_per_run": [
+        "not recorded",
+        "not recorded",
+        "unsure"
+      ],
+      "across_runs": "not verified",
+      "screenshots": [
+        "run-1/steps/S03.png",
+        "run-2/steps/S03.png",
+        "run-3/steps/S03.png"
+      ]
+    },
+    {
+      "step": 4,
+      "ref": "C4",
+      "expected": "No layout breakage, overlapping elements, or unreadable text on the checkout step-one page",
+      "observed_per_run": [
+        "Page facts give visible text only (heading 'Checkout: Your Information', Cancel, header and footer text, no overlap or clipping data). No layout measurements were recorded, so layout cannot be confirmed from these facts.",
+        "Visible text reads cleanly in order (Open Menu, Swag Labs, 2, Checkout: Your Information, Cancel, footer). The facts are text-only, so no layout or overlap can be confirmed.",
+        "Visible text is clean and readable: header 'Swag Labs', badge '2', title 'Checkout: Your Information', 'Cancel', footer links. Page facts are text only and give no layout or overlap information."
+      ],
+      "result_per_run": [
+        "unsure",
+        "unsure",
+        "unsure"
+      ],
+      "across_runs": "not verified",
+      "screenshots": [
+        "run-1/steps/S04.png",
+        "run-2/steps/S04.png",
+        "run-3/steps/S04.png"
+      ]
+    },
+    {
+      "step": 4,
+      "ref": "C5",
+      "expected": "No unexpected console errors or failed network requests",
+      "observed_per_run": [
+        "0 console entries, 0 failed requests",
+        "0 console entries, 0 failed requests",
+        "0 console entries, 0 failed requests"
+      ],
+      "result_per_run": [
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "across_runs": "confirmed pass",
+      "screenshots": [
+        "run-1/steps/S04.png",
+        "run-2/steps/S04.png",
+        "run-3/steps/S04.png"
+      ]
+    },
+    {
+      "step": 4,
+      "ref": "F3",
+      "expected": "Cart badge count equals the number of items actually in the cart",
+      "observed_per_run": [
+        "",
+        "Badge reads 2 on the checkout page. The page facts list no cart items (items: []), so the badge cannot be compared with the cart contents at this step.",
+        "Badge reads 2 on checkout-step-one. The page's items list is empty, because this checkout step does not show cart items, so the cart contents cannot be counted from this page."
+      ],
+      "result_per_run": [
+        "not recorded",
+        "unsure",
+        "unsure"
+      ],
+      "across_runs": "not verified",
+      "screenshots": [
+        "run-1/steps/S04.png",
+        "run-2/steps/S04.png",
+        "run-3/steps/S04.png"
+      ]
+    },
+    {
+      "step": 4,
+      "ref": "C1",
+      "expected": "Product names, images, descriptions and prices match each other wherever they appear.",
+      "observed_per_run": [
+        "",
+        "",
+        "No product names, images, descriptions or prices are shown on this page, so there is nothing to compare here."
+      ],
+      "result_per_run": [
+        "not recorded",
+        "not recorded",
+        "unsure"
+      ],
+      "across_runs": "not verified",
+      "screenshots": [
+        "run-1/steps/S04.png",
+        "run-2/steps/S04.png",
+        "run-3/steps/S04.png"
+      ]
+    },
+    {
+      "step": 5,
+      "ref": "F5",
+      "expected": "Checkout accepts valid First Name, Last Name, Postal Code, and each field keeps exactly what was typed. Page is on checkout-step-one with no error.",
+      "observed_per_run": [
+        "URL is https://www.saucedemo.com/checkout-step-one.html, heading reads 'Checkout: Your Information'. error_message is null. Inputs read back as first-name='Test', last-name='User', postal-code='12345', matching the typed values exactly. Agent report agrees with page facts.",
+        "URL is checkout-step-one.html. Inputs read back as first-name \"Test\", last-name \"User\", postal-code \"12345\", exactly as typed. error_message is null. Cart badge shows 2. Page still shows the \"Checkout: Your Information\" heading.",
+        "URL is https://www.saucedemo.com/checkout-step-one.html with heading 'Checkout: Your Information'. Input values read back from the page: first-name 'Test', last-name 'User', postal-code '12345'. error_message is null. Cart badge is '2'. The agent report agrees with these page facts."
+      ],
+      "result_per_run": [
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "across_runs": "confirmed pass",
+      "screenshots": [
+        "run-1/steps/S05.png",
+        "run-2/steps/S05.png",
+        "run-3/steps/S05.png"
+      ]
+    },
+    {
+      "step": 5,
+      "ref": "C5",
+      "expected": "No unexpected console errors or failed network requests",
+      "observed_per_run": [
+        "0 console entries, 0 failed requests",
+        "0 console entries, 0 failed requests",
+        "0 console entries, 0 failed requests"
+      ],
+      "result_per_run": [
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "across_runs": "confirmed pass",
+      "screenshots": [
+        "run-1/steps/S05.png",
+        "run-2/steps/S05.png",
+        "run-3/steps/S05.png"
+      ]
+    },
+    {
+      "step": 6,
+      "ref": "F6",
+      "expected": "Overview shows the same items as the cart; item total equals the sum of item prices; total equals item total plus tax.",
+      "observed_per_run": [
+        "Overview (checkout-step-two.html, 'Checkout: Overview') lists Sauce Labs Backpack ($29.99, qty 1) and Sauce Labs Bike Light ($9.99, qty 1). Sum of prices = $39.98, matching 'Item total: $39.98'. Tax $3.20 + item total $39.98 = $43.18, matching 'Total: $43.18'. Badge reads 2. The cart contents are not in this step's page facts, so the item-by-item match against the cart is not confirmed here.",
+        "URL is checkout-step-two.html, heading 'Checkout: Overview'. Two line items: Sauce Labs Backpack $29.99 (qty 1) and Sauce Labs Bike Light $9.99 (qty 1). Item total $39.98, Tax $3.20, Total $43.18. Cart badge reads 2. The two items match the products selected in step 2. The cart page itself was not re-read in this step, so the item-by-item comparison is against the selection rather than a fresh cart read.",
+        "Overview lists Sauce Labs Backpack ($29.99, qty 1) and Sauce Labs Bike Light ($9.99, qty 1). Item total $39.98 = 29.99 + 9.99. Tax $3.20. Total $43.18 = 39.98 + 3.20. Badge shows 2. The two items match the products the agent selected. The cart page itself was not read in this step, so the item-by-item comparison against the cart is not confirmed here."
+      ],
+      "result_per_run": [
+        "unsure",
+        "pass",
+        "pass"
+      ],
+      "across_runs": "not verified",
+      "screenshots": [
+        "run-1/steps/S06.png",
+        "run-2/steps/S06.png",
+        "run-3/steps/S06.png"
+      ]
+    },
+    {
+      "step": 6,
+      "ref": "C5",
+      "expected": "No unexpected console errors or failed network requests",
+      "observed_per_run": [
+        "0 console entries, 0 failed requests",
+        "0 console entries, 0 failed requests",
+        "0 console entries, 0 failed requests"
+      ],
+      "result_per_run": [
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "across_runs": "confirmed pass",
+      "screenshots": [
+        "run-1/steps/S06.png",
+        "run-2/steps/S06.png",
+        "run-3/steps/S06.png"
+      ]
+    },
+    {
+      "step": 6,
+      "ref": "C1",
+      "expected": "Product name and price match wherever the product appears.",
+      "observed_per_run": [
+        "",
+        "",
+        "Overview names and prices are internally consistent (names match the descriptions shown, prices add up to the item total). No products-list or cart page facts were captured in this step to compare against, so cross-page consistency is not confirmed."
+      ],
+      "result_per_run": [
+        "not recorded",
+        "not recorded",
+        "unsure"
+      ],
+      "across_runs": "not verified",
+      "screenshots": [
+        "run-1/steps/S06.png",
+        "run-2/steps/S06.png",
+        "run-3/steps/S06.png"
+      ]
+    },
+    {
+      "step": 6,
+      "ref": "C4",
+      "expected": "No layout breakage, overlapping elements, or unreadable text on the overview.",
+      "observed_per_run": [
+        "",
+        "",
+        "Visible text is complete and in logical order (items, payment, shipping, price breakdown, Cancel/Finish buttons). The page facts contain no visual or overlap data, so layout could not be verified."
+      ],
+      "result_per_run": [
+        "not recorded",
+        "not recorded",
+        "unsure"
+      ],
+      "across_runs": "not verified",
+      "screenshots": [
+        "run-1/steps/S06.png",
+        "run-2/steps/S06.png",
+        "run-3/steps/S06.png"
+      ]
+    },
+    {
+      "step": 7,
+      "ref": "F7",
+      "expected": "Finishing shows an order confirmation, and the cart is empty afterwards",
+      "observed_per_run": [
+        "URL is checkout-complete.html. Visible text shows 'Checkout: Complete!', 'Thank you for your order!' and the dispatch message. cart_badge is null, so no badge is shown. The agent report's 'Cart, empty' label is not in the page facts, but it does not conflict with the null badge.",
+        "URL is /checkout-complete.html. Visible text shows 'Checkout: Complete!' and 'Thank you for your order!', followed by the dispatch message. cart_badge is null and items is an empty list.",
+        "URL is https://www.saucedemo.com/checkout-complete.html. Visible text shows 'Checkout: Complete!', 'Thank you for your order!' and 'Your order has been dispatched...'. cart_badge is null and items is an empty list."
+      ],
+      "result_per_run": [
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "across_runs": "confirmed pass",
+      "screenshots": [
+        "run-1/steps/S07.png",
+        "run-2/steps/S07.png",
+        "run-3/steps/S07.png"
+      ]
+    },
+    {
+      "step": 7,
+      "ref": "C5",
+      "expected": "No unexpected console errors or failed network requests",
+      "observed_per_run": [
+        "0 console entries, 0 failed requests",
+        "0 console entries, 0 failed requests",
+        "0 console entries, 0 failed requests"
+      ],
+      "result_per_run": [
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "across_runs": "confirmed pass",
+      "screenshots": [
+        "run-1/steps/S07.png",
+        "run-2/steps/S07.png",
+        "run-3/steps/S07.png"
+      ]
+    },
+    {
+      "step": 7,
+      "ref": "C4",
+      "expected": "No layout breakage, overlapping elements, or unreadable text on the confirmation page",
+      "observed_per_run": [
+        "",
+        "",
+        "The page facts contain visible text only, with no layout, overlap or readability data. Nothing in the facts shows a layout problem, but nothing confirms one is absent either."
+      ],
+      "result_per_run": [
+        "not recorded",
+        "not recorded",
+        "unsure"
+      ],
+      "across_runs": "not verified",
+      "screenshots": [
+        "run-1/steps/S07.png",
+        "run-2/steps/S07.png",
+        "run-3/steps/S07.png"
+      ]
+    },
+    {
+      "step": 8,
+      "ref": "C1",
+      "expected": "Fleece Jacket name, description and price on the detail page match the same product's entry on the products list",
+      "observed_per_run": [
+        "Detail page (inventory-item.html?id=5) shows name 'Sauce Labs Fleece Jacket', the description text, and price '$49.99'. The products-list row for the jacket was not observed, so there is nothing to compare against.",
+        "Agent opened the Backpack and Bike Light detail pages but did not read or compare name, price or description against the list. Page facts cover only /checkout-step-one.html (no product items on that page), so nothing about product consistency is confirmed.",
+        "On the products list, Sauce Labs Onesie shows name, $7.99 and image red-onesie. The agent reports the detail page was opened, but the page facts do not capture the detail page's name, price or description, so the match across pages cannot be checked."
+      ],
+      "result_per_run": [
+        "unsure",
+        "unsure",
+        "unsure"
+      ],
+      "across_runs": "not verified",
+      "screenshots": [
+        "run-1/steps/S08.png",
+        "run-2/steps/S08.png",
+        "run-3/steps/S08.png"
+      ]
+    },
+    {
+      "step": 8,
+      "ref": "C2",
+      "expected": "'Back to products' returns to the products page",
+      "observed_per_run": [
+        "Page facts were read on inventory-item.html?id=5 only, so the destination of 'Back to products' is not visible in the page facts. The agent report says it landed on /inventory.html, but that is not confirmed by page facts.",
+        "Agent report says the Backpack link opened /inventory-item.html, 'Back to products' returned to /inventory.html, the Bike Light link opened its detail page, and the badge opened /cart.html. No page facts were captured for those URLs, and the agent did not verify the product shown matched the link label. The only page facts are for /checkout-step-one.html, which shows the title 'Checkout: Your Information' as the Checkout button implied.",
+        ""
+      ],
+      "result_per_run": [
+        "unsure",
+        "unsure",
+        "not recorded"
+      ],
+      "across_runs": "not verified",
+      "screenshots": [
+        "run-1/steps/S08.png",
+        "run-2/steps/S08.png",
+        "run-3/steps/S08.png"
+      ]
+    },
+    {
+      "step": 8,
+      "ref": "C4",
+      "expected": "No layout breakage, overlapping elements or unreadable text on the detail page",
+      "observed_per_run": [
+        "Visible text on the detail page is complete and in order (title, description, price, Remove button, footer). Page facts are text only, so layout and overlap cannot be judged.",
+        "Page facts for /checkout-step-one.html show readable text (title, Cancel, Continue, footer) with no error message. No visual or layout check was recorded for the other pages in this step.",
+        "Page text on the products list is complete and readable, with all six prices visible. No layout information (overlap, clipping) was captured, so layout cannot be judged from these facts."
+      ],
+      "result_per_run": [
+        "unsure",
+        "unsure",
+        "unsure"
+      ],
+      "across_runs": "not verified",
+      "screenshots": [
+        "run-1/steps/S08.png",
+        "run-2/steps/S08.png",
+        "run-3/steps/S08.png"
+      ]
+    },
+    {
+      "step": 8,
+      "ref": "C5",
+      "expected": "No unexpected console errors or failed network requests",
+      "observed_per_run": [
+        "0 console entries, 0 failed requests",
+        "0 console entries, 0 failed requests",
+        "0 console entries, 0 failed requests"
+      ],
+      "result_per_run": [
+        "pass",
+        "pass",
+        "pass"
+      ],
+      "across_runs": "confirmed pass",
+      "screenshots": [
+        "run-1/steps/S08.png",
+        "run-2/steps/S08.png",
+        "run-3/steps/S08.png"
+      ]
+    },
+    {
+      "step": 8,
+      "ref": "F2",
+      "expected": "Add to cart on a product adds that product and the button changes to Remove",
+      "observed_per_run": [
+        "",
+        "",
+        "The agent reports adding Sauce Labs Onesie from its detail page. On the final products list, Sauce Labs Onesie shows Remove, and the other five products show Add to cart."
+      ],
+      "result_per_run": [
+        "not recorded",
+        "not recorded",
+        "pass"
+      ],
+      "across_runs": "not verified",
+      "screenshots": [
+        "run-1/steps/S08.png",
+        "run-2/steps/S08.png",
+        "run-3/steps/S08.png"
+      ]
+    },
+    {
+      "step": 8,
+      "ref": "F3",
+      "expected": "Cart badge count equals the number of items actually in the cart",
+      "observed_per_run": [
+        "",
+        "",
+        "Badge reads 1. Exactly one product (Sauce Labs Onesie) shows Remove on the list. The cart page itself was not opened or read, so the item count in the cart is not directly confirmed."
+      ],
+      "result_per_run": [
+        "not recorded",
+        "not recorded",
+        "unsure"
+      ],
+      "across_runs": "not verified",
+      "screenshots": [
+        "run-1/steps/S08.png",
+        "run-2/steps/S08.png",
+        "run-3/steps/S08.png"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "S4-F5",
+      "step": 4,
+      "quality_ref": "F5",
+      "classification": "unconfirmed",
+      "seen_in_runs": [
+        2
+      ],
+      "runs_total": 3,
+      "type": "suspicious",
+      "title": "Continue button not confirmed by page facts",
+      "expected": "Checkout step one shows Cancel and Continue buttons, as the agent report states.",
+      "observed": "visible_text lists 'Cancel' but no 'Continue'. The agent report says both buttons are present. Page facts are reliable, so the Continue button is unconfirmed. It may be an input[type=submit] whose value does not appear in innerText, which would be a limitation of the facts rather than an app fault.",
+      "agent_suggested_severity": "observation",
+      "confidence": "low",
+      "technical_signal": "none",
+      "evidence": [
+        "run-2/steps/S04.png"
+      ],
+      "ai_review": {
+        "suggested_status": "likely false positive",
+        "suggested_severity": "observation",
+        "screenshot_supports_description": "unclear",
+        "reasoning": "The finding is that the Continue button is not in the page's visible_text, while the agent report says both Cancel and Continue are present. No screenshot is attached to this finding, so I cannot visually confirm either way. The page facts list 'Cancel' but not 'Continue'. The likely cause is that on SauceDemo the Continue control is an input[type=submit] with value=\"Continue\". innerText does not include input values, so the fact extractor would miss it while the button is actually rendered. The agent's own report is consistent with a normal checkout-step-one page, and the step itself (reaching checkout-step-one with badge 2 and empty fields) is consistent with the expected flow. Nothing here shows a wrong total, a lost form value or a blocked checkout, so it does not touch F1-F7 in any way that would fail the run. The fact extractor's own note (type=suspicious, confidence=low) points the same way. The finding is best read as a limitation of the page facts rather than an app fault. Reviewing one screenshot of step 4 would settle it quickly.",
+        "question_for_human": "Is there a screenshot of checkout-step-one from run 2 that shows the Continue button? If it is visible, close this as a fact-extraction limitation. If the page facts consistently miss input[type=submit] values, consider adding a check for input values so this does not recur as a finding. Also confirm that the Continue button is reached and works in step 5, where F5 is actually tested.",
+        "saw_images": true
+      },
+      "human_decision": null
+    },
+    {
+      "id": "S8-F2",
+      "step": 8,
+      "quality_ref": "F2",
+      "classification": "unconfirmed",
+      "seen_in_runs": [
+        1
+      ],
+      "runs_total": 3,
+      "type": "suspicious",
+      "title": "Agent report contradicts itself on the Fleece Jacket 'Add to cart' click",
+      "expected": "If the jacket was not in the cart, the detail page shows 'Add to cart'; clicking it adds the jacket and the button changes to 'Remove'.",
+      "observed": "The agent report says the detail page already showed 'Remove' and badge 1 when opened, and then says 'Add to cart' was clicked (action 11) and the page then showed 'Remove' with badge 1. If the button already read 'Remove', there was no 'Add to cart' to click. Current page facts (Remove, badge 1) fit a jacket already being in the cart. The cart contents are not visible in the page facts (items list is empty), so whether the click added anything cannot be confirmed.",
+      "agent_suggested_severity": "observation",
+      "confidence": "medium",
+      "technical_signal": "none",
+      "evidence": [
+        "run-1/steps/S08.png"
+      ],
+      "ai_review": {
+        "suggested_status": "needs human",
+        "suggested_severity": "observation",
+        "screenshot_supports_description": "unclear",
+        "reasoning": "No screenshot is attached to this finding, so the claim cannot be checked visually. The description is internally contradictory. It says the Fleece Jacket detail page already showed \"Remove\" and badge 1 on arrival, and then that \"Add to cart\" was clicked. If the button already read \"Remove\", there was nothing to add, and the cart contents were never captured (items list empty), so the click's effect on the cart is unconfirmed. Two readings fit. (a) The agent misread the page state, which would make this a false positive, probably with the jacket added on an earlier step or the button label misread. (b) The jacket was already in the cart before the test step, which points to stale cart state carried over from earlier in the run or from a previous session. That would be a test-setup or state-isolation question, not a clear F2 failure. The report is also unfinished: the path notes are cut off, and the badge value after \"Remove\" was not captured. Neither reading can be confirmed from this text. Suggested next step: re-run from a clean login with the cart confirmed empty, capture the Fleece Jacket page with its button label and badge before and after the click, and read the cart. Severity is observation at most, since F2 is not confirmed as broken.",
+        "question_for_human": "Was the cart empty when the Fleece Jacket page was opened? If it was, the 'Remove' label on arrival suggests a real state problem. If not, this is a test-setup issue. Please check with a clean login and a screenshot before and after the click.",
+        "saw_images": true
+      },
+      "human_decision": null
+    }
+  ],
+  "coverage": [
+    {
+      "run": 1,
+      "pages": [
+        "/",
+        "/inventory.html",
+        "/cart.html",
+        "/checkout-step-one.html",
+        "/checkout-step-two.html",
+        "/checkout-complete.html",
+        "/inventory-item.html"
+      ],
+      "actions": 31,
+      "paths": [
+        "Opened \"Sauce Labs Onesie\" detail page (inventory-item.html), then clicked \"Back to products\" and landed on /inventory.html. I did not capture the Onesie detail page's name, price or description text in what I observed, so I cannot confirm they match the list.",
+        "On the products page, clicked \"Remove\" (action 6), returned to /inventory.html. I did not capture the cart badge value after this step.",
+        "Used the sort dropdown three times in sequence: \"Price (low to high)\", then \"Name (Z to A)\", then \"Price (high to low)\". Each select was logged as ok and the page stayed on /inventory.html. I did not capture the resulting product order after any of these, so I cannot confirm the order matched each label.",
+        "Opened \"Sauce Labs Fleece Jacket\" detail page (inventory-item.html?id=5). Page text shows the name \"Sauce Labs Fleece Jacket\", the description \"It's not every day that you come across a midweight quarter-zip fleece jacket capable of handling everything from a relaxing day outdoors to a busy day at the office.\", and the price \"$49.99\". The button shows \"Remove\" and the cart badge shows 1.",
+        "On the Fleece Jacket detail page, clicked \"Add to cart\" (action 11), logged ok. The page now shows \"Remove\" and cart badge 1. This is consistent with the cart holding only the jacket after the earlier Remove."
+      ]
+    },
+    {
+      "run": 2,
+      "pages": [
+        "/",
+        "/inventory.html",
+        "/cart.html",
+        "/checkout-step-one.html",
+        "/checkout-step-two.html",
+        "/checkout-complete.html",
+        "/inventory-item.html"
+      ],
+      "actions": 31,
+      "paths": [
+        "Opened the \"Sauce Labs Backpack\" detail page (click on product link, now at /inventory-item.html), then clicked \"Add to cart\" on that page (action ok, still at /inventory-item.html). Cart badge afterwards showed 1 on the current page. I did not check the detail page's name, price or description against the list.",
+        "Clicked \"Back to products\" from the Backpack detail page; returned to /inventory.html. Did not verify that the list was unchanged or that the Backpack still showed \"Remove\" rather than \"Add to cart\".",
+        "Used the sort dropdown and selected \"Price (low to high)\"; action ok, page at /inventory.html. I did NOT read the resulting product order, so I cannot say whether the order matches the label. This is a required check still open.",
+        "Opened the \"Sauce Labs Bike Light\" detail page (/inventory-item.html) and then clicked \"Back to products\" (/inventory.html). I did not add the Bike Light to the cart and did not compare its detail-page name, price or description with the list.",
+        "Clicked the cart badge link \"1\" from the products page; landed on /cart.html. I did not read the cart contents, so I cannot confirm that the item and its price match.",
+        "From /cart.html clicked \"Checkout\"; landed on /checkout-step-one.html titled \"Checkout: Your Information\". Fields First Name, Last Name and Zip/Postal Code are empty (value=\"\"), with \"Cancel\" and \"Continue\" buttons."
+      ]
+    },
+    {
+      "run": 3,
+      "pages": [
+        "/",
+        "/inventory.html",
+        "/cart.html",
+        "/checkout-step-one.html",
+        "/checkout-step-two.html",
+        "/checkout-complete.html",
+        "/inventory-item.html"
+      ],
+      "actions": 31,
+      "paths": [
+        "Actions 4-6: on an inventory-item (product detail) page, clicked \"Add to cart\" (ok), then \"Remove\" (ok), then \"Back to products\" (ok, now /inventory.html). I did not record the product name on that detail page or the cart badge after each step, so I cannot confirm the badge followed the add and remove.",
+        "Action 7: set the products sort dropdown to \"Price (low to high)\" (ok). The dropdown shows value \"lohi\". The visible order is Sauce Labs Onesie $7.99, Sauce Labs Bike Light $9.99, Sauce Labs Bolt T-Shirt $15.99, which is ascending. The remaining items' prices are cut off in the page text, so the full order is not verified.",
+        "Actions 8-11: opened \"View details for Sauce Labs Onesie\" (ok, now /inventory-item.html), clicked \"Add to cart\" (ok), clicked \"Back to products\" (ok), then re-selected \"Price (low to high)\" (ok). On the final list, Sauce Labs Onesie shows a \"Remove\" button and the cart badge reads 1. I did not capture the detail page's name, price or description, so I could not compare them with the list values ($7.99; \"Rib snap infant onesie for the junior automation engineer in development. Reinforced 3-snap bottom closure, two-needle hemmed sleeved and bottom won't unravel.\")."
+      ]
+    }
+  ],
+  "not_covered": [
+    "steps outside the mission file",
+    "browsers other than Chromium",
+    "component/unit and API level",
+    "performance, security, full accessibility"
+  ],
+  "files": {
+    "report": "report.md",
+    "comparison": "comparison.md",
+    "runs": [
+      "run-1/run.yaml",
+      "run-2/run.yaml",
+      "run-3/run.yaml"
+    ]
+  }
+}

@@ -1,0 +1,125 @@
+- quality_ref: C1
+  title: All product images share one src that looks like a 404 placeholder
+  type: suspicious
+  oracle: 'Product consistency: the same product should show its own image, and a shopper should see a real picture.'
+  expected: Each product has its own distinct image that loads.
+  observed: All six products on the inventory page have image src '/assets/sl-404-Cq1a9k9X.jpg', which contains '404'. The
+    page facts do not say whether the image loaded.
+  confidence: medium
+  suggested_severity: observation
+  id: S1-C1-1
+  step: 1
+  evidence: steps/S01.png
+  technical_signal: console/network entries in this step
+- quality_ref: C1
+  title: All six products point to the same image file, named 'sl-404'
+  type: suspicious
+  oracle: Product consistency / Claims
+  expected: Each product shows its own image that matches its name and description
+  observed: Every product on the inventory page has image src /assets/sl-404-Cq1a9k9X.jpg. The file name suggests a 404 or
+    placeholder asset. Rendering is not visible in the page facts.
+  confidence: medium
+  suggested_severity: minor
+  id: S2-C1-1
+  step: 2
+  evidence: steps/S02.png
+  technical_signal: console/network entries in this step
+- quality_ref: F5
+  title: Checkout step one loses Last Name and Postal Code input; checkout cannot continue
+  type: failure
+  oracle: Claims; Purpose
+  expected: After entering First Name Test, Last Name User and Postal Code 12345, each field keeps the typed value and the
+    shopper can continue to the overview.
+  observed: Only First Name holds "Test". Last Name and Postal Code read back as empty on /checkout-step-one.html, with no
+    error message. The agent reported typing "User" into Last Name and got ok, but the page does not show it. The page did
+    not advance to the overview.
+  confidence: medium
+  suggested_severity: blocker
+  id: S5-F5-1
+  step: 5
+  evidence: steps/S05.png
+  technical_signal: none
+- quality_ref: F5
+  title: Agent repeated the same typing actions after apparent success, and the run ended without a final report
+  type: suspicious
+  oracle: History
+  expected: Each field is typed at most once, and any failure is reported after one retry (TS-003).
+  observed: The agent typed First Name and Last Name again in actions 10 and 11 and 12 without confirming the values were
+    kept, then ran out of actions with no final report. It is unclear whether the empty fields come from the app or from how
+    the browsing tool enters text.
+  confidence: medium
+  suggested_severity: observation
+  id: S5-F5-2
+  step: 5
+  evidence: steps/S05.png
+  technical_signal: none
+- quality_ref: F5
+  title: Last Name not kept on checkout step one; Continue blocked with 'Last Name is required'
+  type: failure
+  oracle: Claims (Continue with valid info should proceed); User expectations (a typed name should stay in the field)
+  expected: Typed Last Name (e.g. "User") remains in the Last Name field, and Continue moves to the order overview.
+  observed: 'After the agent reported typing into Last Name, the field value is empty. Continue shows ''Error: Last Name is
+    required'' and stays on /checkout-step-one.html. Postal Code is also empty. First Name shows ''Tester''. The cart badge
+    still shows 2.'
+  confidence: high
+  suggested_severity: blocker
+  id: S6-F5-1
+  step: 6
+  evidence: steps/S06.png
+  technical_signal: none
+- quality_ref: F5
+  title: Postal Code left empty before Continue (step 5 incomplete in this run)
+  type: suspicious
+  oracle: Purpose (the user must be able to complete the order)
+  expected: Step 5 enters First Name, Last Name and Postal Code before Continue.
+  observed: The agent did not fill Postal Code, citing it as outside the step. Continue was clicked with Last Name and Postal
+    Code both empty, so the blocked result cannot be attributed to Last Name alone.
+  confidence: medium
+  suggested_severity: observation
+  id: S6-F5-2
+  step: 6
+  evidence: steps/S06.png
+  technical_signal: none
+- quality_ref: F5
+  title: Last Name typed value lands in First Name; Last Name stays empty on checkout step one
+  type: failure
+  oracle: Claims (the field labelled Last Name should receive the Last Name input); User expectations (typed input appears
+    in the field it was typed into)
+  expected: First Name = 'Test', Last Name = 'User', Postal Code = '12345', each kept exactly as typed.
+  observed: After repeated 'Last Name' typing attempts, page facts show first-name = 'User', last-name = '', postal-code =
+    '12345'. The agent's report says each Last Name type returned 'ok', but the page state contradicts this. First Name was
+    never set to 'Test'. The run stopped at action 12 before Continue, so step 6 and step 7 were not reached.
+  confidence: high
+  suggested_severity: major
+  id: S7-F5-1
+  step: 7
+  evidence: steps/S07.png
+  technical_signal: none
+- quality_ref: F5
+  title: Agent report contradicts page facts on field values
+  type: unexpected
+  oracle: 'History / Claims: the agent''s report of ''ok'' does not match the read-back field state'
+  expected: Agent report matches the field values read back from the page.
+  observed: Agent reported 'type [4] Last Name text=User -> ok' three times and 'type [5] Postal Code 12345 -> ok', yet page
+    facts show the 'User' text in first-name and last-name empty. Per the rules, page facts are trusted over the agent report.
+  confidence: high
+  suggested_severity: observation
+  id: S7-F5-2
+  step: 7
+  evidence: steps/S07.png
+  technical_signal: none
+- quality_ref: C2
+  title: Price (low to high) sort does not reorder products
+  type: suspicious
+  oracle: 'Claims: the app should do what its labels say'
+  expected: After choosing 'Price (low to high)', products are listed from cheapest to most expensive, starting with Sauce
+    Labs Onesie at $7.99 and Sauce Labs Bike Light at $9.99
+  observed: After the agent selected 'Price (low to high)' twice, the page stayed on /inventory.html and the list is still
+    in A to Z order, starting with Sauce Labs Backpack $29.99 then Sauce Labs Bike Light $9.99. The agent report says the
+    sort select's value is 'az'. The page facts do not show which option is selected.
+  confidence: medium
+  suggested_severity: minor
+  id: S8-C2-1
+  step: 8
+  evidence: steps/S08.png
+  technical_signal: none

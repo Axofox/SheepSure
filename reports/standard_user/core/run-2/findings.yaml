@@ -1,0 +1,14 @@
+- quality_ref: F5
+  title: Continue button not confirmed by page facts
+  type: suspicious
+  oracle: Claims
+  expected: Checkout step one shows Cancel and Continue buttons, as the agent report states.
+  observed: visible_text lists 'Cancel' but no 'Continue'. The agent report says both buttons are present. Page facts are
+    reliable, so the Continue button is unconfirmed. It may be an input[type=submit] whose value does not appear in innerText,
+    which would be a limitation of the facts rather than an app fault.
+  confidence: low
+  suggested_severity: observation
+  id: S4-F5-1
+  step: 4
+  evidence: steps/S04.png
+  technical_signal: none

@@ -1,0 +1,651 @@
+run: 3
+outcome: blocked at step 5
+seconds: 491
+records:
+- step: 1
+  action: Log in with the given account.
+  exploration: false
+  agent_finished: true
+  agent_report: Step 1 of 8 complete. Logged in as problem_user / secret_sauce by typing the username and password and clicking
+    Login. The page is now https://www.saucedemo.com/inventory.html and shows the "Products" heading with the inventory list
+    (Sauce Labs Backpack $29.99, Sauce Labs Bike Light $9.99, Sauce Labs Bolt T-Shirt, and others). Cart badge is empty ("Cart,
+    empty"). No login error was shown.
+  agent_urls:
+  - https://www.saucedemo.com/
+  - https://www.saucedemo.com/
+  - https://www.saucedemo.com/inventory.html
+  agent_actions:
+  - type
+  - type
+  - click
+  - done
+  agent_log:
+  - 1. type [1] "Username" text="problem_user" -> ok; now at /
+  - 2. type [2] "Password" text="secret_sauce" -> ok; now at /
+  - 3. click [3] "Login" -> ok; now at /inventory.html
+  paths: []
+  checks:
+  - quality_ref: F1
+    expected: Valid credentials log the user in and land on the products page
+    observed: URL is https://www.saucedemo.com/inventory.html, visible text contains the 'Products' heading, six products
+      are listed, and no error_message is present.
+    result: pass
+  - quality_ref: C1
+    expected: Each product's name, image, description and price match each other everywhere they appear
+    observed: Names and prices are present for all six products and the agent report agrees. Every product's image has the
+      same src, '/assets/sl-404-Cq1a9k9X.jpg', and the path contains '404'. The page facts do not show whether the image renders,
+      so the image-to-product match cannot be confirmed.
+    result: unsure
+  - quality_ref: C5
+    expected: No unexpected console errors or failed network requests
+    observed: 4 console entries, 4 failed requests to events.backtrace.io (third-party only, no visible problem by itself)
+    result: unsure
+  findings:
+  - quality_ref: C1
+    title: All product images share one src that looks like a 404 placeholder
+    type: suspicious
+    oracle: 'Product consistency: the same product should show its own image, and a shopper should see a real picture.'
+    expected: Each product has its own distinct image that loads.
+    observed: All six products on the inventory page have image src '/assets/sl-404-Cq1a9k9X.jpg', which contains '404'. The
+      page facts do not say whether the image loaded.
+    confidence: medium
+    suggested_severity: observation
+    id: S1-C1-1
+    step: 1
+    evidence: steps/S01.png
+    technical_signal: console/network entries in this step
+  screenshot: steps/S01.png
+  page_url: https://www.saucedemo.com/inventory.html
+  console_errors:
+  - '[error] Failed to load resource: the server responded with a status of 401 (Unauthorized)'
+  - '[error] Failed to load resource: the server responded with a status of 401 (Unauthorized)'
+  - '[error] Failed to load resource: the server responded with a status of 401 (Unauthorized)'
+  - '[error] Failed to load resource: the server responded with a status of 401 (Unauthorized)'
+  failed_requests:
+  - 401 POST https://events.backtrace.io/api/summed-events/submit?universe=UNIVERSE&token=TOKEN
+  - 401 POST https://events.backtrace.io/api/unique-events/submit?universe=UNIVERSE&token=TOKEN
+  - 401 POST https://events.backtrace.io/api/summed-events/submit?universe=UNIVERSE&token=TOKEN
+  - 401 POST https://events.backtrace.io/api/unique-events/submit?universe=UNIVERSE&token=TOKEN
+  step_result: unsure
+  seconds: 34
+- step: 2
+  action: Add **Sauce Labs Backpack** and **Sauce Labs Bike Light** to the cart.
+  exploration: false
+  agent_finished: true
+  agent_report: Step 2 complete. Added Sauce Labs Backpack ($29.99) and Sauce Labs Bike Light ($9.99) to the cart. The inventory
+    page now shows "Remove" buttons for both items, and the cart badge reads 2. Still on https://www.saucedemo.com/inventory.html.
+    I did not open the cart or proceed to later steps.
+  agent_urls:
+  - https://www.saucedemo.com/inventory.html
+  - https://www.saucedemo.com/inventory.html
+  agent_actions:
+  - click
+  - click
+  - done
+  agent_log:
+  - 1. click [6] "Add to cart" -> ok; now at /inventory.html
+  - 2. click [9] "Add to cart" -> ok; now at /inventory.html
+  paths: []
+  checks:
+  - quality_ref: F2
+    expected: Add to cart on Sauce Labs Backpack and Sauce Labs Bike Light adds those products and their buttons change to
+      Remove
+    observed: Backpack ($29.99) and Bike Light ($9.99) both show Remove. The other four products still show Add to cart. Agent
+      report matches the page facts.
+    result: pass
+  - quality_ref: F3
+    expected: Cart badge count equals the number of items actually in the cart
+    observed: Badge reads 2 and exactly two products show Remove on the products page. The cart itself was not opened in this
+      step, so the cart contents are not confirmed here.
+    result: unsure
+  - quality_ref: C1
+    expected: Product name, image, description and price match each other where the product appears
+    observed: Names, prices and descriptions are shown as text. All six products use the same image path, /assets/sl-404-Cq1a9k9X.jpg,
+      and the file name contains '404'. The facts do not show whether the image renders, so the match cannot be confirmed.
+    result: unsure
+  - quality_ref: C5
+    expected: No unexpected console errors or failed network requests
+    observed: 2 console entries, 2 failed requests to events.backtrace.io (third-party only, no visible problem by itself)
+    result: unsure
+  findings:
+  - quality_ref: C1
+    title: All six products point to the same image file, named 'sl-404'
+    type: suspicious
+    oracle: Product consistency / Claims
+    expected: Each product shows its own image that matches its name and description
+    observed: Every product on the inventory page has image src /assets/sl-404-Cq1a9k9X.jpg. The file name suggests a 404
+      or placeholder asset. Rendering is not visible in the page facts.
+    confidence: medium
+    suggested_severity: minor
+    id: S2-C1-1
+    step: 2
+    evidence: steps/S02.png
+    technical_signal: console/network entries in this step
+  screenshot: steps/S02.png
+  page_url: https://www.saucedemo.com/inventory.html
+  console_errors:
+  - '[error] Failed to load resource: the server responded with a status of 401 (Unauthorized)'
+  - '[error] Failed to load resource: the server responded with a status of 401 (Unauthorized)'
+  failed_requests:
+  - 401 POST https://events.backtrace.io/api/summed-events/submit?universe=UNIVERSE&token=TOKEN
+  - 401 POST https://events.backtrace.io/api/unique-events/submit?universe=UNIVERSE&token=TOKEN
+  step_result: unsure
+  seconds: 24
+- step: 3
+  action: Open the cart.
+  exploration: false
+  agent_finished: true
+  agent_report: 'Step 3 complete. I clicked the cart icon (badge "2") and the browser is now on https://www.saucedemo.com/cart.html,
+    showing "Your Cart" with 2 items: Sauce Labs Backpack ($29.99) and Sauce Labs Bike Light ($9.99). The page also shows
+    the Continue Shopping and Checkout buttons. I did not do any later steps.'
+  agent_urls:
+  - https://www.saucedemo.com/cart.html
+  agent_actions:
+  - click
+  - done
+  agent_log:
+  - 1. click [2] "2" -> ok; now at /cart.html
+  paths: []
+  checks:
+  - quality_ref: F3
+    expected: Cart badge count equals the number of items actually in the cart
+    observed: Badge reads "2". Cart lists 2 line items (Sauce Labs Backpack qty 1, Sauce Labs Bike Light qty 1), total quantity
+      2.
+    result: pass
+  - quality_ref: F4
+    expected: Cart contains exactly the selected products (Sauce Labs Backpack and Sauce Labs Bike Light) with correct names,
+      prices and quantities
+    observed: Cart shows exactly Sauce Labs Backpack ($29.99, qty 1) and Sauce Labs Bike Light ($9.99, qty 1). No other items.
+      Both show a Remove button.
+    result: pass
+  - quality_ref: C1
+    expected: Product name, image, description and price match each other everywhere they appear
+    observed: Cart names and prices are shown with matching descriptions for each item. Item image is null in page facts,
+      so image consistency against the products page cannot be confirmed from this step. No products-page facts were captured
+      here to compare prices against.
+    result: unsure
+  - quality_ref: C2
+    expected: Clicking the cart icon navigates to the cart
+    observed: Agent clicked the cart icon; URL is https://www.saucedemo.com/cart.html and the page heading reads "Your Cart".
+    result: pass
+  - quality_ref: C4
+    expected: No layout breakage, overlapping elements or unreadable text on the cart page
+    observed: Page facts contain visible text only; no layout or overlap information was captured.
+    result: unsure
+  - quality_ref: C5
+    expected: No unexpected console errors or failed network requests
+    observed: 0 console entries, 0 failed requests
+    result: pass
+  findings: []
+  screenshot: steps/S03.png
+  page_url: https://www.saucedemo.com/cart.html
+  console_errors: none
+  failed_requests: none
+  step_result: unsure
+  seconds: 23
+- step: 4
+  action: Start checkout.
+  exploration: false
+  agent_finished: true
+  agent_report: 'Step 4 (Start checkout) is complete. I clicked "Checkout" in the cart, and the page is now https://www.saucedemo.com/checkout-step-one.html,
+    titled "Checkout: Your Information". The cart badge shows 2. The First Name, Last Name and Zip/Postal Code fields are
+    empty, and the Cancel and Continue buttons are visible. I did not fill in the form or continue.'
+  agent_urls:
+  - https://www.saucedemo.com/checkout-step-one.html
+  agent_actions:
+  - click
+  - done
+  agent_log:
+  - 1. click [8] "Checkout" -> ok; now at /checkout-step-one.html
+  paths: []
+  checks:
+  - quality_ref: F5
+    expected: Checkout step one is reached with an empty Your Information form (First Name, Last Name, Postal Code) that is
+      ready to accept input
+    observed: 'URL is https://www.saucedemo.com/checkout-step-one.html, page text shows ''Checkout: Your Information'' and
+      ''Cancel''. All three inputs (first-name, last-name, postal-code) are empty. No error message. Cart badge shows 2. Input
+      acceptance has not been tested in this step, since no values were typed.'
+    result: unsure
+  - quality_ref: C5
+    expected: No unexpected console errors or failed network requests
+    observed: 0 console entries, 0 failed requests
+    result: pass
+  findings: []
+  screenshot: steps/S04.png
+  page_url: https://www.saucedemo.com/checkout-step-one.html
+  console_errors: none
+  failed_requests: none
+  step_result: unsure
+  seconds: 22
+- step: 5
+  action: Enter valid customer information (First Name `Test`, Last Name `User`, Postal Code `12345`).
+  exploration: false
+  agent_finished: false
+  agent_report: '(no final report: the agent ran out of actions or could not continue) Last actions: 9. type [4] "Last Name"
+    text="User" -> ok; now at /checkout-step-one.html | 10. type [3] "First Name" text="Test" -> ok; now at /checkout-step-one.html
+    | 11. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html | 12. type [3] "First Name" text="Test" ->
+    ok; now at /checkout-step-one.html'
+  agent_urls:
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  agent_actions:
+  - type
+  - type
+  - type
+  - type
+  - type
+  - type
+  - type
+  - type
+  - type
+  - type
+  - type
+  - type
+  agent_log:
+  - 1. type [3] "First Name" text="Test" -> ok; now at /checkout-step-one.html
+  - 2. type [4] "Last Name" text="Test" -> ok; now at /checkout-step-one.html
+  - 3. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
+  - 4. type [3] "First Name" text="Test" -> ok; now at /checkout-step-one.html
+  - 5. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
+  - 6. type [3] "First Name" text="Test" -> ok; now at /checkout-step-one.html
+  - 7. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
+  - 8. type [3] "First Name" text="Test" -> ok; now at /checkout-step-one.html
+  - 9. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
+  - 10. type [3] "First Name" text="Test" -> ok; now at /checkout-step-one.html
+  - 11. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
+  - 12. type [3] "First Name" text="Test" -> ok; now at /checkout-step-one.html
+  paths: []
+  checks:
+  - quality_ref: F5
+    expected: Checkout accepts valid First Name (Test), Last Name (User), Postal Code (12345), and each field keeps exactly
+      what was typed
+    observed: 'Page facts after step 5: first-name = "Test", last-name = "" (empty), postal-code = "" (empty). URL is still
+      /checkout-step-one.html, no error message shown, and the page did not advance. The agent report says Last Name "User"
+      was typed and returned ok, but the page value contradicts that.'
+    result: fail
+  - quality_ref: C5
+    expected: No unexpected console errors or failed network requests
+    observed: 0 console entries, 0 failed requests
+    result: pass
+  - quality_ref: STEP
+    expected: the agent completes the step
+    observed: 'agent did not finish. '
+    result: fail
+  findings:
+  - quality_ref: F5
+    title: Checkout step one loses Last Name and Postal Code input; checkout cannot continue
+    type: failure
+    oracle: Claims; Purpose
+    expected: After entering First Name Test, Last Name User and Postal Code 12345, each field keeps the typed value and the
+      shopper can continue to the overview.
+    observed: Only First Name holds "Test". Last Name and Postal Code read back as empty on /checkout-step-one.html, with
+      no error message. The agent reported typing "User" into Last Name and got ok, but the page does not show it. The page
+      did not advance to the overview.
+    confidence: medium
+    suggested_severity: blocker
+    id: S5-F5-1
+    step: 5
+    evidence: steps/S05.png
+    technical_signal: none
+  - quality_ref: F5
+    title: Agent repeated the same typing actions after apparent success, and the run ended without a final report
+    type: suspicious
+    oracle: History
+    expected: Each field is typed at most once, and any failure is reported after one retry (TS-003).
+    observed: The agent typed First Name and Last Name again in actions 10 and 11 and 12 without confirming the values were
+      kept, then ran out of actions with no final report. It is unclear whether the empty fields come from the app or from
+      how the browsing tool enters text.
+    confidence: medium
+    suggested_severity: observation
+    id: S5-F5-2
+    step: 5
+    evidence: steps/S05.png
+    technical_signal: none
+  screenshot: steps/S05.png
+  page_url: https://www.saucedemo.com/checkout-step-one.html
+  console_errors: none
+  failed_requests: none
+  step_result: fail
+  seconds: 100
+- step: 6
+  action: Continue to the order overview.
+  exploration: false
+  agent_finished: true
+  agent_report: 'BLOCKED at mission step 6 (continue to order overview). Logged in as problem_user earlier and reached /checkout-step-one.html
+    (Checkout: Your Information). First Name shows "Tester". Last Name field [4] shows value="" even though 7 type actions
+    and 1 click on it reported ok. Clicking Continue shows "Error: Last Name is required", so the page never reached the order
+    overview. Zip/Postal Code [5] is also empty. Cart badge shows 2. I did not fill Zip or any other field, since that is
+    outside this step. The Last Name input may be not accepting typed text on this page, or the typing may be going elsewhere.
+    Needs a manual check or a fix before this step can complete.'
+  agent_urls:
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  agent_actions:
+  - click
+  - type
+  - type
+  - type
+  - click
+  - type
+  - type
+  - type
+  - done
+  agent_log:
+  - 1. click [7] "Continue" -> ok; now at /checkout-step-one.html
+  - 2. type [4] "Last Name" text="Tester" -> ok; now at /checkout-step-one.html
+  - 3. type [4] "Last Name" text="Tester" -> ok; now at /checkout-step-one.html
+  - 4. type [4] "Last Name" text="Tester" -> ok; now at /checkout-step-one.html
+  - 5. click [4] "Last Name" -> ok; now at /checkout-step-one.html
+  - 6. type [4] "Last Name" text="Tester" -> ok; now at /checkout-step-one.html
+  - 7. type [4] "Last Name" text="Tester" -> ok; now at /checkout-step-one.html
+  - 8. type [4] "Last Name" text="Tester" -> ok; now at /checkout-step-one.html
+  paths: []
+  checks:
+  - quality_ref: F5
+    expected: After typing First Name, Last Name and Postal Code, each field keeps the typed value, and Continue proceeds
+      to the order overview. Step 6 assumes step 5 entered Last Name "User".
+    observed: 'Page facts: first-name = "Tester", last-name = "", postal-code = "". The URL is still /checkout-step-one.html
+      and the error "Error: Last Name is required" is shown. The Last Name value was not kept, and the page did not advance.'
+    result: fail
+  - quality_ref: F6
+    expected: The order overview shows the cart items, item total = sum of prices, and total = item total + tax.
+    observed: The overview was never reached (URL is still checkout-step-one, items list is empty in page facts). Nothing
+      about the overview can be verified.
+    result: unsure
+  - quality_ref: C3
+    expected: The error message describes the real problem.
+    observed: 'The message "Error: Last Name is required" matches the page state, where the Last Name field is empty. The
+      message is accurate for the state shown, though the agent reports it typed a value that did not persist.'
+    result: pass
+  - quality_ref: C5
+    expected: No unexpected console errors or failed network requests
+    observed: 0 console entries, 0 failed requests
+    result: pass
+  findings:
+  - quality_ref: F5
+    title: Last Name not kept on checkout step one; Continue blocked with 'Last Name is required'
+    type: failure
+    oracle: Claims (Continue with valid info should proceed); User expectations (a typed name should stay in the field)
+    expected: Typed Last Name (e.g. "User") remains in the Last Name field, and Continue moves to the order overview.
+    observed: 'After the agent reported typing into Last Name, the field value is empty. Continue shows ''Error: Last Name
+      is required'' and stays on /checkout-step-one.html. Postal Code is also empty. First Name shows ''Tester''. The cart
+      badge still shows 2.'
+    confidence: high
+    suggested_severity: blocker
+    id: S6-F5-1
+    step: 6
+    evidence: steps/S06.png
+    technical_signal: none
+  - quality_ref: F5
+    title: Postal Code left empty before Continue (step 5 incomplete in this run)
+    type: suspicious
+    oracle: Purpose (the user must be able to complete the order)
+    expected: Step 5 enters First Name, Last Name and Postal Code before Continue.
+    observed: The agent did not fill Postal Code, citing it as outside the step. Continue was clicked with Last Name and Postal
+      Code both empty, so the blocked result cannot be attributed to Last Name alone.
+    confidence: medium
+    suggested_severity: observation
+    id: S6-F5-2
+    step: 6
+    evidence: steps/S06.png
+    technical_signal: none
+  screenshot: steps/S06.png
+  page_url: https://www.saucedemo.com/checkout-step-one.html
+  console_errors: none
+  failed_requests: none
+  step_result: fail
+  seconds: 74
+- step: 7
+  action: Finish the order.
+  exploration: false
+  agent_finished: false
+  agent_report: '(no final report: the agent ran out of actions or could not continue) Last actions: 9. type [4] "Last Name"
+    text="User" -> ok; now at /checkout-step-one.html | 10. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
+    | 11. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html | 12. type [5] "Zip/Postal Code" text="12345"
+    -> ok; now at /checkout-step-one.html'
+  agent_urls:
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  agent_actions:
+  - type
+  - type
+  - type
+  - click
+  - type
+  - type
+  - type
+  - click
+  - type
+  - type
+  - type
+  - type
+  agent_log:
+  - 1. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
+  - 2. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
+  - 3. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
+  - 4. click [4] "Last Name" -> ok; now at /checkout-step-one.html
+  - 5. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
+  - 6. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
+  - 7. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
+  - 8. click [6] "Dismiss error" -> ok; now at /checkout-step-one.html
+  - 9. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
+  - 10. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
+  - 11. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
+  - 12. type [5] "Zip/Postal Code" text="12345" -> ok; now at /checkout-step-one.html
+  paths: []
+  checks:
+  - quality_ref: F5
+    expected: Checkout accepts First Name 'Test', Last Name 'User', Postal Code '12345', and each field keeps exactly what
+      was typed.
+    observed: Page facts show first-name = 'User' (not 'Test'), last-name = '' (empty), postal-code = '12345'. The 'User'
+      value landed in the First Name field, and Last Name is empty despite the agent's report of 'type [4] Last Name text=User
+      -> ok' being repeated three times. First Name and Last Name values are swapped or misplaced; the step never reached
+      a valid, complete entry.
+    result: fail
+  - quality_ref: C3
+    expected: If the form is invalid, any error message accurately describes the real problem.
+    observed: error_message is null and no error text is visible. No submit was attempted in this step, so there is no error
+      that should or should not appear yet. Cannot judge.
+    result: unsure
+  - quality_ref: C5
+    expected: No unexpected console errors or failed network requests
+    observed: 0 console entries, 0 failed requests
+    result: pass
+  - quality_ref: STEP
+    expected: the agent completes the step
+    observed: 'agent did not finish. '
+    result: fail
+  findings:
+  - quality_ref: F5
+    title: Last Name typed value lands in First Name; Last Name stays empty on checkout step one
+    type: failure
+    oracle: Claims (the field labelled Last Name should receive the Last Name input); User expectations (typed input appears
+      in the field it was typed into)
+    expected: First Name = 'Test', Last Name = 'User', Postal Code = '12345', each kept exactly as typed.
+    observed: After repeated 'Last Name' typing attempts, page facts show first-name = 'User', last-name = '', postal-code
+      = '12345'. The agent's report says each Last Name type returned 'ok', but the page state contradicts this. First Name
+      was never set to 'Test'. The run stopped at action 12 before Continue, so step 6 and step 7 were not reached.
+    confidence: high
+    suggested_severity: major
+    id: S7-F5-1
+    step: 7
+    evidence: steps/S07.png
+    technical_signal: none
+  - quality_ref: F5
+    title: Agent report contradicts page facts on field values
+    type: unexpected
+    oracle: 'History / Claims: the agent''s report of ''ok'' does not match the read-back field state'
+    expected: Agent report matches the field values read back from the page.
+    observed: Agent reported 'type [4] Last Name text=User -> ok' three times and 'type [5] Postal Code 12345 -> ok', yet
+      page facts show the 'User' text in first-name and last-name empty. Per the rules, page facts are trusted over the agent
+      report.
+    confidence: high
+    suggested_severity: observation
+    id: S7-F5-2
+    step: 7
+    evidence: steps/S07.png
+    technical_signal: none
+  screenshot: steps/S07.png
+  page_url: https://www.saucedemo.com/checkout-step-one.html
+  console_errors: none
+  failed_requests: none
+  step_result: fail
+  seconds: 101
+- step: 8
+  action: 'Free exploration: try other paths inside this mission''s theme (the AI chooses)'
+  exploration: true
+  agent_finished: true
+  agent_report: 'PATH: Sort dropdown, "Price (low to high)". I selected "Price (low to high)" in the sort select (element
+    [3]) twice. Both selects returned ok and the page stayed at /inventory.html. The select''s current value in the element
+    list is value="az". The product order on the page is Sauce Labs Backpack $29.99, Sauce Labs Bike Light $9.99, Sauce Labs
+    Bolt T-Shirt $15.99, Sauce Labs Fleece Jacket, Sauce Labs Onesie, Test.allTheThings() T-Shirt (Red). That is alphabetical
+    (A to Z) order, not price ascending, which would start with $9.99. Likely bug: the price sort is not applied.
+
+
+    PATH: Product detail page and back navigation, Sauce Labs Backpack. I clicked the "Sauce Labs Backpack" product link (element
+    [3]) and landed on /inventory-item.html. I clicked "Add to cart" (element [4]), which returned ok, then clicked "Back
+    to products" (element [3]) and landed on /inventory.html. I did not capture the detail page''s name, price or description
+    text in my action log, so I cannot confirm them against the list entry ("Sauce Labs Backpack", $29.99, "carry.allTheThings()
+    with the sleek, streamlined Sly Pack...").
+
+
+    PATH: Cart badge after add-to-cart. After the Backpack add-to-cart and return to the list, the cart badge reads "2". The
+    list shows "Remove" buttons for Sauce Labs Backpack and Sauce Labs Bike Light, which matches two items. I did not record
+    the badge value before the add, so I cannot say whether it incremented by exactly 1.
+
+
+    PATH: Checkout step one, then cancel. On /checkout-step-one.html I typed "Tester" into the Last Name field (element [4]),
+    clicked "Dismiss error" (element [6]), which returned ok and kept me on the same page, and then clicked "Cancel" (element
+    [6]), which took me to /cart.html. I did not capture the error text itself, so I cannot quote what the error said.
+
+
+    Note: The first three actions of the session are not in the action list I was given, so this report only covers actions
+    4 to 11. I stopped at 11 of 12 actions and did not use the last one.'
+  agent_urls:
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/checkout-step-one.html
+  - https://www.saucedemo.com/cart.html
+  - https://www.saucedemo.com/inventory-item.html?id=5
+  - https://www.saucedemo.com/inventory-item.html?id=5
+  - https://www.saucedemo.com/inventory.html
+  - https://www.saucedemo.com/inventory.html
+  - https://www.saucedemo.com/inventory.html
+  agent_actions:
+  - click
+  - type
+  - type
+  - type
+  - click
+  - click
+  - click
+  - click
+  - click
+  - select
+  - select
+  - done
+  agent_log:
+  - 1. click [7] "Continue" -> ok; now at /checkout-step-one.html
+  - 2. type [4] "Last Name" text="Tester" -> ok; now at /checkout-step-one.html
+  - 3. type [4] "Last Name" text="Tester" -> ok; now at /checkout-step-one.html
+  - 4. type [4] "Last Name" text="Tester" -> ok; now at /checkout-step-one.html
+  - 5. click [6] "Dismiss error" -> ok; now at /checkout-step-one.html
+  - 6. click [6] "Cancel" -> ok; now at /cart.html
+  - 7. click [3] "Sauce Labs Backpack" -> ok; now at /inventory-item.html
+  - 8. click [4] "Add to cart" -> ok; now at /inventory-item.html
+  - 9. click [3] "Back to products" -> ok; now at /inventory.html
+  - 10. select [3] "Name (A to Z) Name (Z to A) Price (low to high) Price (high " text="Price (low to high)" -> ok; now at
+    /inventory.html
+  - 11. select [3] "Name (A to Z) Name (Z to A) Price (low to high) Price (high " text="Price (low to high)" -> ok; now at
+    /inventory.html
+  paths:
+  - 'Sort dropdown, "Price (low to high)". I selected "Price (low to high)" in the sort select (element [3]) twice. Both selects
+    returned ok and the page stayed at /inventory.html. The select''s current value in the element list is value="az". The
+    product order on the page is Sauce Labs Backpack $29.99, Sauce Labs Bike Light $9.99, Sauce Labs Bolt T-Shirt $15.99,
+    Sauce Labs Fleece Jacket, Sauce Labs Onesie, Test.allTheThings() T-Shirt (Red). That is alphabetical (A to Z) order, not
+    price ascending, which would start with $9.99. Likely bug: the price sort is not applied.'
+  - Product detail page and back navigation, Sauce Labs Backpack. I clicked the "Sauce Labs Backpack" product link (element
+    [3]) and landed on /inventory-item.html. I clicked "Add to cart" (element [4]), which returned ok, then clicked "Back
+    to products" (element [3]) and landed on /inventory.html. I did not capture the detail page's name, price or description
+    text in my action log, so I cannot confirm them against the list entry ("Sauce Labs Backpack", $29.99, "carry.allTheThings()
+    with the sleek, streamlined Sly Pack...").
+  - Cart badge after add-to-cart. After the Backpack add-to-cart and return to the list, the cart badge reads "2". The list
+    shows "Remove" buttons for Sauce Labs Backpack and Sauce Labs Bike Light, which matches two items. I did not record the
+    badge value before the add, so I cannot say whether it incremented by exactly 1.
+  - Checkout step one, then cancel. On /checkout-step-one.html I typed "Tester" into the Last Name field (element [4]), clicked
+    "Dismiss error" (element [6]), which returned ok and kept me on the same page, and then clicked "Cancel" (element [6]),
+    which took me to /cart.html. I did not capture the error text itself, so I cannot quote what the error said.
+  checks:
+  - quality_ref: F3
+    expected: Cart badge count equals the number of items actually in the cart
+    observed: Page facts show cart badge '2'. Two items show 'Remove' (Sauce Labs Backpack and Sauce Labs Bike Light), and
+      no other item shows 'Remove'. The cart contents themselves were not read in this step, so the match is inferred from
+      the product list.
+    result: pass
+  - quality_ref: C1
+    expected: Product name, image, description and price match between the list and the product detail page
+    observed: Page facts were read on /inventory.html only. The agent report says it opened the Backpack detail page but did
+      not record its name, price or description, and no detail-page facts were captured. Nothing can be compared.
+    result: unsure
+  - quality_ref: C2
+    expected: 'Navigation and labelled controls do what their label says: the product link opens that product, ''Back to products''
+      returns to the list, and the sort option produces the order its label names'
+    observed: The agent report says the Backpack link opened /inventory-item.html and 'Back to products' returned to /inventory.html,
+      but no page facts were captured for the detail page. On the list, the products appear in A to Z order (Backpack, Bike
+      Light, Bolt, Fleece Jacket, Onesie, Test.allTheThings), not price ascending as the 'Price (low to high)' label would
+      require. The current sort selection is only stated in the agent report, not in the page facts.
+    result: unsure
+  - quality_ref: C5
+    expected: No unexpected console errors or failed network requests
+    observed: 0 console entries, 0 failed requests
+    result: pass
+  findings:
+  - quality_ref: C2
+    title: Price (low to high) sort does not reorder products
+    type: suspicious
+    oracle: 'Claims: the app should do what its labels say'
+    expected: After choosing 'Price (low to high)', products are listed from cheapest to most expensive, starting with Sauce
+      Labs Onesie at $7.99 and Sauce Labs Bike Light at $9.99
+    observed: After the agent selected 'Price (low to high)' twice, the page stayed on /inventory.html and the list is still
+      in A to Z order, starting with Sauce Labs Backpack $29.99 then Sauce Labs Bike Light $9.99. The agent report says the
+      sort select's value is 'az'. The page facts do not show which option is selected.
+    confidence: medium
+    suggested_severity: minor
+    id: S8-C2-1
+    step: 8
+    evidence: steps/S08.png
+    technical_signal: none
+  screenshot: steps/S08.png
+  page_url: https://www.saucedemo.com/inventory.html
+  console_errors: none
+  failed_requests: none
+  step_result: unsure
+  seconds: 110
