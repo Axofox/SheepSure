@@ -91,7 +91,7 @@ Based on FEW HICCUPPS — the agent checks what it sees against:
 | **Blocker** | The user cannot complete the order | Checkout cannot continue |
 | **Major** | Order completes but is wrong, or user is misled | Wrong item or price in overview |
 | **Minor** | Inconsistent, confusing, but not order-changing | Wrong product image |
-| **Observation** | Looks suspicious; not confirmed as a problem | Unusual behaviour with no error signal |
+| **Observation** | Looks suspicious; not confirmed as a problem | Unusual behaviour with no error signal; a possible flow gap (an expected option is absent, e.g. no way to change quantity in the cart) |
 
 ## 5. Definition of done for a run
 

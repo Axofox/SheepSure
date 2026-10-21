@@ -68,6 +68,10 @@ A mismatch is a signal to **look closer**, not a verdict. Possible causes:
 
 Findings with `technical_signal: none` and `type: suspicious` are grouped into their own section. They are not counted as bugs and do not fail the run. They exist so a human can decide whether "nothing crashed" actually means "everything is fine".
 
+## Possible flow gaps
+
+A **flow gap** is a point where the app works, but a step or option a shopper would reasonably expect is absent, and the quality definition does not say it should exist (rule TS-006). Findings with `type: flow-gap` get their own report section. They are not bugs, do not fail the run, and are a question for the product owner: intended, or a missing requirement? The agent's view of what a shopper "would expect" is an opinion from general knowledge, so a human always decides.
+
 ## Overall verdict
 
 | Verdict | Condition |

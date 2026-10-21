@@ -72,7 +72,7 @@ class Check(BaseModel):
 class Finding(BaseModel):
     quality_ref: str
     title: str
-    type: Literal["failure", "unexpected", "suspicious"]
+    type: Literal["failure", "unexpected", "suspicious", "flow-gap"]
     oracle: str
     expected: str
     observed: str
@@ -744,7 +744,7 @@ def write_report(mission_dir, runs, rows, groups, args, mission_text, steps):
     else:
         verdict = "No verdict (exploration mission: findings only)"
 
-    real_g = [g for g in groups if g["first"]["type"] != "suspicious"]
+    real_g = [g for g in groups if g["first"]["type"] not in ("suspicious", "flow-gap")]
     count = lambda label: sum(g["label"] == label for g in real_g)
     confirmed_fail = [f"{r['ref']} (step {r['step']})" for r in rows if r["across"] in ("confirmed fail", "single run: fail")]
     not_verified = sum(r["across"] in ("not verified",) or "unsure" in r["statuses"] or "not recorded" in r["statuses"] for r in rows)
@@ -773,8 +773,9 @@ def write_report(mission_dir, runs, rows, groups, args, mission_text, steps):
                   + " | ".join(f"{ICON[s]} {s}" for s in row["statuses"]) + f" | **{row['across']}** | {shots} |")
 
     md += ["\n## 2b. Coverage: what each run explored\n"] + coverage_markdown(runs)
-    real = [g for g in groups if g["first"]["type"] != "suspicious"]
+    real = [g for g in groups if g["first"]["type"] not in ("suspicious", "flow-gap")]
     silent = [g for g in groups if g["first"]["type"] == "suspicious"]
+    gaps = [g for g in groups if g["first"]["type"] == "flow-gap"]
     md += ["\n## 3. Needs your decision\n", "| # | Finding | Seen in | AI suggestion | Question for you |", "|---|---|---|---|---|"]
     for i, g in enumerate(real, 1):
         md.append(f"| {i} | S{g['step']} {g['ref']}: {cell(g['first']['title'])} | {g['seen']}/{n} | {cell((g.get('review') or {}).get('suggested_status', 'not reviewed'))} "
@@ -806,6 +807,10 @@ def write_report(mission_dir, runs, rows, groups, args, mission_text, steps):
     md += ["\n## 7. Silent observations (no error signal)\n", "Not classified as bugs.\n",
            "| Observation | Seen in | Observed |", "|---|---|---|"]
     md += [f"| S{g['step']} {g['ref']}: {cell(g['first']['title'])} | {g['seen']}/{n} | {cell(g['first']['observed'])} |" for g in silent] or ["| None | | |"]
+    md += ["\n## 7b. Possible flow gaps\n", "Something a shopper would expect is absent, and the quality definition does not cover it. Not bugs. "
+           "Question for the product owner: intended, or a missing requirement?\n",
+           "| What is missing | Seen in | What the shopper would expect |", "|---|---|---|"]
+    md += [f"| S{g['step']} {g['ref']}: {cell(g['first']['title'])} | {g['seen']}/{n} | {cell(g['first']['expected'])} |" for g in gaps] or ["| None | | |"]
     md += ["\n## 8. Known / excluded\n",
            "Not tracked automatically yet: the judge applies `test-standards.md` while judging. Check `run-<n>/run.md` for details.\n",
            "\n## 9. Not covered in this run\n",

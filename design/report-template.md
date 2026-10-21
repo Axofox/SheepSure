@@ -79,6 +79,14 @@ Things that looked off with no console or network error. **Not classified as bug
 |---|---|---|
 | `<…>` | `<x/3>` | `<…>` |
 
+## 7b. Possible flow gaps
+
+Something a shopper would expect is absent, and the quality definition does not cover it. **Not bugs.** Question for the product owner: intended, or a missing requirement?
+
+| What is missing | Seen in | What the shopper would expect |
+|---|---|---|
+| `<…>` | `<x/3>` | `<…>` |
+
 ## 8. Known / excluded
 
 Items matched against rules in `test-standards.md` and therefore not reported as findings.

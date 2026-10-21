@@ -50,6 +50,39 @@ test-standards.md ─────┘   Run 2 ─┼──► Compare ──► R
 - User: `problem_user` / `secret_sauce`
 - Tooling: Playwright drives the browser and captures screenshots, console and network logs. A small agent loop in `runner.py` lets an LLM choose the actions. Browser Use supplies the model wrappers. The model is your choice (local via Ollama, or hosted), set with `--model` or `LLM_MODEL` in `.env`.
 
+## How to run the test
+
+Run from the project folder. Each command starts a fresh batch of 3 runs and overwrites the previous batch for that account and mission.
+
+**Standard run (3 runs at the same time, hosted model):**
+
+```bash
+.venv/bin/python runner.py --account standard_user --mission core --model claude-haiku-5-5 --parallel --max-agent-steps 12
+```
+
+| Option | What it does |
+|---|---|
+| `--account` | `standard_user` (baseline) or `problem_user` (seeded bugs) |
+| `--mission` | `core` (the demo), or `reset-state`, `cart-crud`, `form-errors` |
+| `--model` | The model for browsing, judging and review. Names starting with `claude` or `gemini` use a hosted model; anything else is a local Ollama model. Can also be set as `LLM_MODEL` in `.env` |
+| `--parallel` | Runs all 3 runs at the same time instead of one after another. Use it with a hosted model, **not** with a local Ollama model. A batch takes about 5 minutes instead of about 15 |
+| `--max-agent-steps` | How many actions the agent may take per mission step (one click, one typed input or one navigation). Default is 12. Raise it for longer flows. A higher limit costs more time and tokens |
+| `--runs` | Number of runs (default 3) |
+| `--headed` | Show the browser window |
+| `--add-run` | Add one more run to the existing folder, then compare all runs |
+| `--review-only` | Redo comparison and report from the saved runs, no browsing |
+
+The free-exploration step has its own action limit, set by `Budget:` in the mission file (for example `missions/core.md`).
+
+**Both accounts, so you can compare them:**
+
+```bash
+.venv/bin/python runner.py --account problem_user --mission core --model claude-haiku-5-5 --parallel --max-agent-steps 12
+.venv/bin/python runner.py --account standard_user --mission core --model claude-haiku-5-5 --parallel --max-agent-steps 12
+```
+
+The report is written to `reports/<account>/<mission>/report.md`. Observed values come from the page. Pass/fail judgements come from the AI and need a human review.
+
 ## What is automated vs. human
 
 | Automated (AI) | Human |

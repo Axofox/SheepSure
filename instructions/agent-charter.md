@@ -73,7 +73,7 @@ Findings are only for checks that failed, or for things that looked wrong. Every
   step: <1-7>
   oracle: <claims | user-expectation | consistency | history | comparable | purpose | standards>
   quality_ref: <F1-F7 | C1-C5 | R1-R4 | D1-D4 | V1-V3>      # which expectation from quality-definition.md
-  type: <failure | unexpected | suspicious>
+  type: <failure | unexpected | suspicious | flow-gap>
   expected: <what quality-definition.md says should happen>
   observed: <what actually happened, factual>
   technical_signal: <console error / network error / none>
@@ -87,6 +87,7 @@ Findings are only for checks that failed, or for things that looked wrong. Every
 - **failure** — an expectation from F1–F7 did not hold. Clear evidence.
 - **unexpected** — something differs from what a user or the spec would expect.
 - **suspicious** — looks off but there is **no error signal** (no console error, no failed request). Report it, label it, do **not** call it a bug.
+- **flow-gap** — nothing is broken, but a step or option a shopper would reasonably expect is **absent**, and `quality-definition.md` does not say it should exist. Say what is missing and what the shopper would expect. Use severity `observation`. It is a question for the product owner, never a bug and never a failed check.
 
 ## Final run summary
 

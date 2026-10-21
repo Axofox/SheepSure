@@ -89,3 +89,14 @@
   date: 2026-10-20
   review_by: —
 ```
+
+```yaml
+- id: TS-006
+  type: interpret
+  rule: If something works but a step or option a shopper would reasonably expect is absent, and quality-definition.md does not say it should exist, report type "flow-gap" (a possible flow gap / possible unconfirmed bug). Name what is missing and what the shopper would expect. Never call it a bug and never fail a check for it.
+  reason: Without an expected behaviour there is nothing to compare against. A human (product owner) decides if it is intended or a missing requirement.
+  scope: all steps
+  added_by: Tina
+  date: 2026-10-21
+  review_by: —
+```
