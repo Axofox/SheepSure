@@ -27,7 +27,6 @@ An AI agent explores the SauceDemo checkout flow **three times**, the results ar
 | `design/human-in-the-loop.md` | Where humans decide, and the feedback loop | Human |
 | `design/roadmap.md` | What to improve next and how this scales across QA | — |
 | `runner.py` | The AI runner: drives the browser, judges, compares runs, writes the report | Code |
-| `scripted_run.py` | No-AI baseline run that proves screenshot and log capture work | Code |
 | `reports/` | Output of `runner.py`, per account and mission (overwritten per batch) | Generated |
 | `pilots/` | Three manual runs through the Chrome extension, kept as evidence, plus their comparison | History |
 
