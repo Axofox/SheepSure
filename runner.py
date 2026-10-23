@@ -692,6 +692,26 @@ def coverage(run):
     return {"pages": pages, "actions": actions, "paths": paths}
 
 
+def action_key(line):
+    """An agent log line without the element number and the page it ended on, so runs can be compared."""
+    line = re.sub(r"^\d+\. ", "", line)
+    line = re.sub(r"^(\w+) \[\d+\]", r"\1", line)
+    return re.sub(r"; now at .*$", "", line).replace(" -> ok", "")
+
+
+def paths_markdown(runs):
+    """Per step, the actions each run took. Steps where the runs did different things are marked."""
+    n = len(runs)
+    md = ["| Step | Same in all runs? | " + " | ".join(f"Run {run['run']}" for run in runs) + " |", "|---|---|" + "---|" * n]
+    for i in range(max(len(run["records"]) for run in runs)):
+        acts = [[action_key(l) for l in run["records"][i].get("agent_log", [])] if i < len(run["records"]) else []
+                for run in runs]
+        same = all(a == acts[0] for a in acts)
+        cells = ["<br>".join(f"{k}. {cell(a)}" for k, a in enumerate(a_list, 1)) or "_no actions_" for a_list in acts]
+        md.append(f"| {i + 1} | {'✅ same' if same else '⚠️ **differs**'} | " + " | ".join(cells) + " |")
+    return md
+
+
 def coverage_markdown(runs):
     """What each run explored. Paths are the AI's own words, so they are listed side by side, not matched."""
     cov = [coverage(run) for run in runs]
@@ -706,6 +726,7 @@ def coverage_markdown(runs):
         partial = [p for p in union if sum(p in c["pages"] for c in cov) < n]
         md += [f"- `{p}`: only in run(s) " + ", ".join(str(runs[i]["run"]) for i, c in enumerate(cov) if p in c["pages"])
                for p in partial] or ["- none, all runs visited the same pages"]
+    md += ["", "**Actions per step** (element numbers and result pages left out; a step marked ⚠️ was done differently):\n"] + paths_markdown(runs)
     md += ["", "**Paths each run tried in free exploration** (as reported by the AI; details in `run-<n>/run.md`):\n"]
     for run, c in zip(runs, cov):
         md.append(f"- **Run {run['run']}** ({len(c['paths'])}):")
@@ -713,15 +734,39 @@ def coverage_markdown(runs):
     return md
 
 
+def checked_in(row, runs):
+    """Which runs recorded this check. 'all runs' when every run did, else the runs that did."""
+    done = [str(run["run"]) for run, s in zip(runs, row["statuses"]) if s != "not recorded"]
+    return "all runs" if len(done) == len(runs) else "🔀 only run " + (", ".join(done) or "none")
+
+
+def unsure_markdown(runs, rows):
+    """For every check a run marked unsure: the judge's own explanation (its 'observed' text), or the judge error."""
+    md = []
+    for row in rows:
+        for run, status, observed in zip(runs, row["statuses"], row["observed"]):
+            if status != "unsure":
+                continue
+            why = observed.strip() or "no explanation given"
+            if why.startswith("judge failed"):
+                why = "the AI judge call failed, so nothing was judged (" + why[:90] + "...)"
+            md.append(f"- **Step {row['step']} {row['ref']}, run {run['run']}:** {cell(why)}")
+    return md or ["- no check was marked unsure"]
+
+
 def write_comparison(mission_dir, runs, rows):
     n = len(runs)
+    differing = sum(checked_in(row, runs) != "all runs" for row in rows)
     md = [f"# Comparison across {n} run(s)\n", "Rules: `run-protocol.md`. One row per step + expectation.\n",
-          "| Step | Ref | Expected | " + " | ".join(f"Run {i}" for i in range(1, n + 1)) + " | Across runs |",
-          "|---|---|---|" + "---|" * n + "---|"]
+          f"**Same checks in every run?** {len(rows) - differing} of {len(rows)} checks were recorded in all runs. "
+          f"{differing} were not (marked 🔀 in the 'Checked in' column).\n",
+          "| Step | Ref | Expected | Checked in | " + " | ".join(f"Run {i}" for i in range(1, n + 1)) + " | Across runs |",
+          "|---|---|---|---|" + "---|" * n + "---|"]
     for row in rows:
-        md.append(f"| {row['step']} | {row['ref']} | {cell(row['expected'])} | "
+        md.append(f"| {row['step']} | {row['ref']} | {cell(row['expected'])} | {checked_in(row, runs)} | "
                   + " | ".join(f"[{ICON[s]} {s}](run-{i}/steps/S{row['step']:02d}.png)" for i, s in enumerate(row["statuses"], 1))
                   + f" | **{row['across']}** |")
+    md += ["\n## Why the AI was unsure\n", "The judge's own words for each check it could not call pass or fail.\n"] + unsure_markdown(runs, rows)
     md += ["\n## Coverage: what each run explored\n"] + coverage_markdown(runs)
     (mission_dir / "comparison.md").write_text("\n".join(md) + "\n")
 
