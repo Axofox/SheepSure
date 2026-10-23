@@ -1,16 +1,1 @@
-- quality_ref: F2
-  title: Agent report contradicts itself on the Fleece Jacket 'Add to cart' click
-  type: suspicious
-  oracle: Claims
-  expected: If the jacket was not in the cart, the detail page shows 'Add to cart'; clicking it adds the jacket and the button
-    changes to 'Remove'.
-  observed: The agent report says the detail page already showed 'Remove' and badge 1 when opened, and then says 'Add to cart'
-    was clicked (action 11) and the page then showed 'Remove' with badge 1. If the button already read 'Remove', there was
-    no 'Add to cart' to click. Current page facts (Remove, badge 1) fit a jacket already being in the cart. The cart contents
-    are not visible in the page facts (items list is empty), so whether the click added anything cannot be confirmed.
-  confidence: medium
-  suggested_severity: observation
-  id: S8-F2-1
-  step: 8
-  evidence: steps/S08.png
-  technical_signal: none
+[]

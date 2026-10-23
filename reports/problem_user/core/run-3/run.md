@@ -1,12 +1,12 @@
 <a id="top"></a>
 # Run 3 - problem_user - mission core
 
-Model: `claude (your plan) / claude-haiku-5-5` · Outcome: **blocked at step 5** · Duration: 491s · Findings: 9
+Model: `claude (your plan) / claude-opus-5-5` · Outcome: **completed with issues** · Duration: 328s · Findings: 7
 
 | Step | Action | Result | Screenshot |
 |---|---|---|---|
-| [1](#step-1) | Log in with the given account. | ⚠️ unsure | [screenshot](steps/S01.png) |
-| [2](#step-2) | Add **Sauce Labs Backpack** and **Sauce Labs Bike Light** to the cart. | ⚠️ unsure | [screenshot](steps/S02.png) |
+| [1](#step-1) | Log in with the given account. | ❌ fail | [screenshot](steps/S01.png) |
+| [2](#step-2) | Add **Sauce Labs Backpack** and **Sauce Labs Bike Light** to the cart. | ❌ fail | [screenshot](steps/S02.png) |
 | [3](#step-3) | Open the cart. | ⚠️ unsure | [screenshot](steps/S03.png) |
 | [4](#step-4) | Start checkout. | ⚠️ unsure | [screenshot](steps/S04.png) |
 | [5](#step-5) | Enter valid customer information (First Name `Test`, Last Name `User`, Postal Code `12345` | ❌ fail | [screenshot](steps/S05.png) |
@@ -17,13 +17,13 @@ Model: `claude (your plan) / claude-haiku-5-5` · Outcome: **blocked at step 5**
 ---
 
 <a id="step-1"></a>
-## Step 1 ⚠️
+## Step 1 ❌
 
 [↑ back to summary](#top) · jump to [screenshot](#step-1-shot)
 
 **Action:** Log in with the given account.
 
-**Agent report:** Step 1 of 8 complete. Logged in as problem_user / secret_sauce by typing the username and password and clicking Login. The page is now https://www.saucedemo.com/inventory.html and shows the "Products" heading with the inventory list (Sauce Labs Backpack $29.99, Sauce Labs Bike Light $9.99, Sauce Labs Bolt T-Shirt, and others). Cart badge is empty ("Cart, empty"). No login error was shown.
+**Agent report:** Logged in as problem_user: I typed "problem_user" into Username and "secret_sauce" into Password, then clicked "Login". The browser moved to https://www.saucedemo.com/inventory.html, which shows the "Products" heading with "Name (A to Z)" sorting and the item list (Sauce Labs Backpack $29.99, Sauce Labs Bike Light $9.99, Sauce Labs Bolt T-Shirt, and more), each with an "Add to cart" button. The cart is empty and no error message is shown. I did not check the product images, which is where problem_user usually has known issues.
 
 **Agent actions (4):**
 
@@ -35,29 +35,29 @@ Model: `claude (your plan) / claude-haiku-5-5` · Outcome: **blocked at step 5**
 
 | Check | Expected | Observed | Result |
 |---|---|---|---|
-| F1 | Valid credentials log the user in and land on the products page | URL is https://www.saucedemo.com/inventory.html, visible text contains the 'Products' heading, six products are listed, and no error_message is present. | ✅ pass |
-| C1 | Each product's name, image, description and price match each other everywhere they appear | Names and prices are present for all six products and the agent report agrees. Every product's image has the same src, '/assets/sl-404-Cq1a9k9X.jpg', and the path contains '404'. The page facts do not show whether the image renders, so the image-to-product match cannot be confirmed. | ⚠️ unsure |
-| C5 | No unexpected console errors or failed network requests | 4 console entries, 4 failed requests to events.backtrace.io (third-party only, no visible problem by itself) | ⚠️ unsure |
+| F1 | Valid credentials log the user in and land on the products page | URL is https://www.saucedemo.com/inventory.html, the 'Products' heading and 6 items each with 'Add to cart' are shown, error_message is null, cart_badge is null (empty cart). | ✅ pass |
+| C1 | Each product's name, image, description and price match each other | All 6 products use the same image, '/assets/sl-404-Cq1a9k9X.jpg', so no product shows its own picture. Names, prices and descriptions look consistent. The agent report says it did not check images. | ❌ fail |
+| C5 | No unexpected console errors or failed network requests | 6 console entries, 6 failed requests to events.backtrace.io (third-party only, no visible problem by itself) | ⚠️ unsure |
 
-- **Finding S1-C1-1** (suspicious, observation): All product images share one src that looks like a 404 placeholder. Observed: All six products on the inventory page have image src '/assets/sl-404-Cq1a9k9X.jpg', which contains '404'. The page facts do not say whether the image loaded.
+- **Finding S1-C1-1** (suspicious, minor): All products on the inventory page show the same placeholder image (sl-404). Observed: All 6 items (Sauce Labs Backpack, Bike Light, Bolt T-Shirt, Fleece Jacket, Onesie, Test.allTheThings() T-Shirt (Red)) have image src '/assets/sl-404-Cq1a9k9X.jpg'. No console or network error is linked to this; the only errors were the 401s from backtrace.io telemetry. The agent report did not check images.
 
-Console: ['[error] Failed to load resource: the server responded with a status of 401 (Unauthorized)', '[error] Failed to load resource: the server responded with a status of 401 (Unauthorized)', '[error] Failed to load resource: the server responded with a status of 401 (Unauthorized)', '[error] Failed to load resource: the server responded with a status of 401 (Unauthorized)']  
-Failed requests: ['401 POST https://events.backtrace.io/api/summed-events/submit?universe=UNIVERSE&token=TOKEN', '401 POST https://events.backtrace.io/api/unique-events/submit?universe=UNIVERSE&token=TOKEN', '401 POST https://events.backtrace.io/api/summed-events/submit?universe=UNIVERSE&token=TOKEN', '401 POST https://events.backtrace.io/api/unique-events/submit?universe=UNIVERSE&token=TOKEN']
+Console: ['[error] Failed to load resource: the server responded with a status of 401 (Unauthorized)', '[error] Failed to load resource: the server responded with a status of 401 (Unauthorized)', '[error] Failed to load resource: the server responded with a status of 401 (Unauthorized)', '[error] Failed to load resource: the server responded with a status of 401 (Unauthorized)', '[error] Failed to load resource: the server responded with a status of 401 (Unauthorized)', '[error] Failed to load resource: the server responded with a status of 401 (Unauthorized)']  
+Failed requests: ['401 POST https://events.backtrace.io/api/summed-events/submit?universe=UNIVERSE&token=TOKEN', '401 POST https://events.backtrace.io/api/unique-events/submit?universe=UNIVERSE&token=TOKEN', '401 POST https://events.backtrace.io/api/unique-events/submit?universe=UNIVERSE&token=TOKEN', '401 POST https://events.backtrace.io/api/summed-events/submit?universe=UNIVERSE&token=TOKEN', '401 POST https://events.backtrace.io/api/summed-events/submit?universe=UNIVERSE&token=TOKEN', '401 POST https://events.backtrace.io/api/unique-events/submit?universe=UNIVERSE&token=TOKEN']
 
-<a id="step-1-shot"></a>**Outcome** - [steps/S01.png](steps/S01.png) · 34s
+<a id="step-1-shot"></a>**Outcome** - [steps/S01.png](steps/S01.png) · 62s
 
 ![step 1 outcome](steps/S01.png)
 
 ---
 
 <a id="step-2"></a>
-## Step 2 ⚠️
+## Step 2 ❌
 
 [↑ back to summary](#top) · jump to [screenshot](#step-2-shot)
 
 **Action:** Add **Sauce Labs Backpack** and **Sauce Labs Bike Light** to the cart.
 
-**Agent report:** Step 2 complete. Added Sauce Labs Backpack ($29.99) and Sauce Labs Bike Light ($9.99) to the cart. The inventory page now shows "Remove" buttons for both items, and the cart badge reads 2. Still on https://www.saucedemo.com/inventory.html. I did not open the cart or proceed to later steps.
+**Agent report:** I added both items to the cart from /inventory.html by clicking "Add to cart" on Sauce Labs Backpack ($29.99) and on Sauce Labs Bike Light ($9.99). Both clicks went through. Both items now show a "Remove" button, and the cart badge says "2". I didn't open the cart page, so I haven't checked which items are actually in it. That's worth checking later because problem_user is known to be buggy. Nothing looked wrong on this page.
 
 **Agent actions (3):**
 
@@ -68,17 +68,15 @@ Failed requests: ['401 POST https://events.backtrace.io/api/summed-events/submit
 
 | Check | Expected | Observed | Result |
 |---|---|---|---|
-| F2 | Add to cart on Sauce Labs Backpack and Sauce Labs Bike Light adds those products and their buttons change to Remove | Backpack ($29.99) and Bike Light ($9.99) both show Remove. The other four products still show Add to cart. Agent report matches the page facts. | ✅ pass |
-| F3 | Cart badge count equals the number of items actually in the cart | Badge reads 2 and exactly two products show Remove on the products page. The cart itself was not opened in this step, so the cart contents are not confirmed here. | ⚠️ unsure |
-| C1 | Product name, image, description and price match each other where the product appears | Names, prices and descriptions are shown as text. All six products use the same image path, /assets/sl-404-Cq1a9k9X.jpg, and the file name contains '404'. The facts do not show whether the image renders, so the match cannot be confirmed. | ⚠️ unsure |
-| C5 | No unexpected console errors or failed network requests | 2 console entries, 2 failed requests to events.backtrace.io (third-party only, no visible problem by itself) | ⚠️ unsure |
+| F2 | Clicking 'Add to cart' on Sauce Labs Backpack and Sauce Labs Bike Light adds those products, and their buttons change to 'Remove' | On /inventory.html, Sauce Labs Backpack ($29.99) and Sauce Labs Bike Light ($9.99) both show 'Remove'. All other products still show 'Add to cart'. Which products are actually in the cart is not visible yet, so that part can only be confirmed on the cart page (step 3). | ✅ pass |
+| F3 | The cart badge count equals the number of items actually in the cart | The badge shows '2', which matches the two items showing 'Remove'. The cart contents have not been read yet, so the facts can't confirm that the badge matches what is really in the cart. | ⚠️ unsure |
+| C1 | Each product's name, image, description and price match each other | All 6 products use the same image source '/assets/sl-404-Cq1a9k9X.jpg' (a 404/placeholder asset), not a product-specific image. Names, descriptions and prices look consistent with each other. | ❌ fail |
+| C4 | No layout breakage, overlapping elements or unreadable text | The visible text reads normally. The page facts don't show visual layout, so overlap can't be judged. Every product image points to a 404-named asset, which suggests broken images (recorded under C1). | ⚠️ unsure |
+| C5 | No unexpected console errors or failed network requests | 0 console entries, 0 failed requests | ✅ pass |
 
-- **Finding S2-C1-1** (suspicious, minor): All six products point to the same image file, named 'sl-404'. Observed: Every product on the inventory page has image src /assets/sl-404-Cq1a9k9X.jpg. The file name suggests a 404 or placeholder asset. Rendering is not visible in the page facts.
+- **Finding S2-C1-1** (suspicious, minor): All product images on the inventory page show the same 404 placeholder image. Observed: All 6 products have image '/assets/sl-404-Cq1a9k9X.jpg'. There were no console errors and no failed network requests. The agent report said 'Nothing looked wrong on this page', which the page facts contradict.
 
-Console: ['[error] Failed to load resource: the server responded with a status of 401 (Unauthorized)', '[error] Failed to load resource: the server responded with a status of 401 (Unauthorized)']  
-Failed requests: ['401 POST https://events.backtrace.io/api/summed-events/submit?universe=UNIVERSE&token=TOKEN', '401 POST https://events.backtrace.io/api/unique-events/submit?universe=UNIVERSE&token=TOKEN']
-
-<a id="step-2-shot"></a>**Outcome** - [steps/S02.png](steps/S02.png) · 24s
+<a id="step-2-shot"></a>**Outcome** - [steps/S02.png](steps/S02.png) · 45s
 
 ![step 2 outcome](steps/S02.png)
 
@@ -91,7 +89,7 @@ Failed requests: ['401 POST https://events.backtrace.io/api/summed-events/submit
 
 **Action:** Open the cart.
 
-**Agent report:** Step 3 complete. I clicked the cart icon (badge "2") and the browser is now on https://www.saucedemo.com/cart.html, showing "Your Cart" with 2 items: Sauce Labs Backpack ($29.99) and Sauce Labs Bike Light ($9.99). The page also shows the Continue Shopping and Checkout buttons. I did not do any later steps.
+**Agent report:** I clicked the cart icon (badge "2") and the cart opened at https://www.saucedemo.com/cart.html with the header "Your Cart". It lists 2 items, each with QTY 1 and a "Remove" button: "Sauce Labs Backpack" at $29.99 and "Sauce Labs Bike Light" at $9.99. The "Continue Shopping" and "Checkout" buttons are shown. I took no further actions.
 
 **Agent actions (2):**
 
@@ -101,14 +99,13 @@ Failed requests: ['401 POST https://events.backtrace.io/api/summed-events/submit
 
 | Check | Expected | Observed | Result |
 |---|---|---|---|
-| F3 | Cart badge count equals the number of items actually in the cart | Badge reads "2". Cart lists 2 line items (Sauce Labs Backpack qty 1, Sauce Labs Bike Light qty 1), total quantity 2. | ✅ pass |
-| F4 | Cart contains exactly the selected products (Sauce Labs Backpack and Sauce Labs Bike Light) with correct names, prices and quantities | Cart shows exactly Sauce Labs Backpack ($29.99, qty 1) and Sauce Labs Bike Light ($9.99, qty 1). No other items. Both show a Remove button. | ✅ pass |
-| C1 | Product name, image, description and price match each other everywhere they appear | Cart names and prices are shown with matching descriptions for each item. Item image is null in page facts, so image consistency against the products page cannot be confirmed from this step. No products-page facts were captured here to compare prices against. | ⚠️ unsure |
-| C2 | Clicking the cart icon navigates to the cart | Agent clicked the cart icon; URL is https://www.saucedemo.com/cart.html and the page heading reads "Your Cart". | ✅ pass |
-| C4 | No layout breakage, overlapping elements or unreadable text on the cart page | Page facts contain visible text only; no layout or overlap information was captured. | ⚠️ unsure |
+| F3 | The cart badge count equals the number of items in the cart. | The badge reads "2" and the cart lists 2 items (Sauce Labs Backpack, Sauce Labs Bike Light). | ✅ pass |
+| F4 | The cart holds exactly the selected products (Sauce Labs Backpack and Sauce Labs Bike Light) with the right names, prices and quantities. | The cart shows Sauce Labs Backpack at $29.99 with QTY 1 and Sauce Labs Bike Light at $9.99 with QTY 1. Both have a Remove button and nothing else is in the cart. | ✅ pass |
+| C2 | Clicking the cart icon opens the cart. | The URL is https://www.saucedemo.com/cart.html and the header reads "Your Cart". | ✅ pass |
+| C1 | Each product's name, image, description and price match each other everywhere it appears. | Inside the cart, each description fits its product: the Backpack has the 'Sly Pack' text and the Bike Light has the red light text. The prices are the usual catalog prices. The cart page shows no images (image is null), and this step gives no product-list facts to compare against. | ⚠️ unsure |
 | C5 | No unexpected console errors or failed network requests | 0 console entries, 0 failed requests | ✅ pass |
 
-<a id="step-3-shot"></a>**Outcome** - [steps/S03.png](steps/S03.png) · 23s
+<a id="step-3-shot"></a>**Outcome** - [steps/S03.png](steps/S03.png) · 33s
 
 ![step 3 outcome](steps/S03.png)
 
@@ -121,7 +118,7 @@ Failed requests: ['401 POST https://events.backtrace.io/api/summed-events/submit
 
 **Action:** Start checkout.
 
-**Agent report:** Step 4 (Start checkout) is complete. I clicked "Checkout" in the cart, and the page is now https://www.saucedemo.com/checkout-step-one.html, titled "Checkout: Your Information". The cart badge shows 2. The First Name, Last Name and Zip/Postal Code fields are empty, and the Cancel and Continue buttons are visible. I did not fill in the form or continue.
+**Agent report:** I clicked "Checkout" and the page moved to /checkout-step-one.html. It shows "Checkout: Your Information" with three empty fields (First Name, Last Name, Zip/Postal Code) and two buttons, "Cancel" and "Continue". The cart badge shows 2. Checkout has started. I left the form empty because filling it in is a later step.
 
 **Agent actions (2):**
 
@@ -131,10 +128,13 @@ Failed requests: ['401 POST https://events.backtrace.io/api/summed-events/submit
 
 | Check | Expected | Observed | Result |
 |---|---|---|---|
-| F5 | Checkout step one is reached with an empty Your Information form (First Name, Last Name, Postal Code) that is ready to accept input | URL is https://www.saucedemo.com/checkout-step-one.html, page text shows 'Checkout: Your Information' and 'Cancel'. All three inputs (first-name, last-name, postal-code) are empty. No error message. Cart badge shows 2. Input acceptance has not been tested in this step, since no values were typed. | ⚠️ unsure |
+| C2 | Clicking "Checkout" opens the checkout information page. | The URL is https://www.saucedemo.com/checkout-step-one.html and the page shows "Checkout: Your Information". | ✅ pass |
+| F5 | Checkout opens a form with First Name, Last Name and Postal Code fields, ready for valid input. | The page has three inputs: first-name, last-name and postal-code. All are empty and there is no error message. Typing and keeping values is checked in step 5. The "Continue" button is not in visible_text, but it is probably an input element whose label is not captured as text. The agent reports seeing it. | ✅ pass |
+| F3 | The cart badge count equals the number of items in the cart (2 selected products). | cart_badge is "2". The page facts do not list the cart items on this page, so the badge cannot be checked against the actual contents here. It does match the 2 products selected in the scenario. | ⚠️ unsure |
+| C4 | No broken layout, overlapping elements or unreadable text. | The page facts have no layout or visual information (no screenshot facts). The visible text looks normal. | ⚠️ unsure |
 | C5 | No unexpected console errors or failed network requests | 0 console entries, 0 failed requests | ✅ pass |
 
-<a id="step-4-shot"></a>**Outcome** - [steps/S04.png](steps/S04.png) · 22s
+<a id="step-4-shot"></a>**Outcome** - [steps/S04.png](steps/S04.png) · 36s
 
 ![step 4 outcome](steps/S04.png)
 
@@ -147,36 +147,23 @@ Failed requests: ['401 POST https://events.backtrace.io/api/summed-events/submit
 
 **Action:** Enter valid customer information (First Name `Test`, Last Name `User`, Postal Code `12345`).
 
-**Agent report:** (no final report: the agent ran out of actions or could not continue) Last actions: 9. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html | 10. type [3] "First Name" text="Test" -> ok; now at /checkout-step-one.html | 11. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html | 12. type [3] "First Name" text="Test" -> ok; now at /checkout-step-one.html
+**Agent report:** Blocked: the customer information could not be entered correctly. On /checkout-step-one.html I typed "Test" into First Name [3] and "User" into Last Name [4]. Both actions reported ok. The page now shows First Name value="User", Last Name value="" and Zip/Postal Code value="". The Last Name text went into the First Name field and replaced "Test", and the Last Name field is still empty. I did not fill in the postal code or click Continue. This looks like a bug in the form for problem_user: typing in Last Name writes to First Name.
 
-**Agent actions (12):**
+**Agent actions (3):**
 
 - 1. type [3] "First Name" text="Test" -> ok; now at /checkout-step-one.html
-- 2. type [4] "Last Name" text="Test" -> ok; now at /checkout-step-one.html
-- 3. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
-- 4. type [3] "First Name" text="Test" -> ok; now at /checkout-step-one.html
-- 5. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
-- 6. type [3] "First Name" text="Test" -> ok; now at /checkout-step-one.html
-- 7. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
-- 8. type [3] "First Name" text="Test" -> ok; now at /checkout-step-one.html
-- 9. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
-- 10. type [3] "First Name" text="Test" -> ok; now at /checkout-step-one.html
-- 11. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
-- 12. type [3] "First Name" text="Test" -> ok; now at /checkout-step-one.html
+- 2. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
 
 **Pages visited:** /checkout-step-one.html
 
 | Check | Expected | Observed | Result |
 |---|---|---|---|
-| F5 | Checkout accepts valid First Name (Test), Last Name (User), Postal Code (12345), and each field keeps exactly what was typed | Page facts after step 5: first-name = "Test", last-name = "" (empty), postal-code = "" (empty). URL is still /checkout-step-one.html, no error message shown, and the page did not advance. The agent report says Last Name "User" was typed and returned ok, but the page value contradicts that. | ❌ fail |
+| F5 | After typing, First Name = "Test", Last Name = "User", Postal Code = "12345". Each field keeps exactly what was typed and checkout can continue. | Page facts after the step: first-name = "User", last-name = "", postal-code = "". The Last Name input ended up in First Name and replaced "Test". Last Name is empty. Postal Code was not filled in and Continue was not clicked, because the agent stopped as TS-003 requires. No error message is shown. | ❌ fail |
 | C5 | No unexpected console errors or failed network requests | 0 console entries, 0 failed requests | ✅ pass |
-| STEP | the agent completes the step | agent did not finish.  | ❌ fail |
 
-- **Finding S5-F5-1** (failure, blocker): Checkout step one loses Last Name and Postal Code input; checkout cannot continue. Observed: Only First Name holds "Test". Last Name and Postal Code read back as empty on /checkout-step-one.html, with no error message. The agent reported typing "User" into Last Name and got ok, but the page does not show it. The page did not advance to the overview.
+- **Finding S5-F5-1** (failure, blocker): Typing in Last Name writes into First Name and overwrites it; Last Name stays empty. Observed: first-name = "User", last-name = "" (runner page facts, which match the agent report). No console errors and no failed network requests, so this is a silent client-side input bug. The cart badge still shows 2.
 
-- **Finding S5-F5-2** (suspicious, observation): Agent repeated the same typing actions after apparent success, and the run ended without a final report. Observed: The agent typed First Name and Last Name again in actions 10 and 11 and 12 without confirming the values were kept, then ran out of actions with no final report. It is unclear whether the empty fields come from the app or from how the browsing tool enters text.
-
-<a id="step-5-shot"></a>**Outcome** - [steps/S05.png](steps/S05.png) · 100s
+<a id="step-5-shot"></a>**Outcome** - [steps/S05.png](steps/S05.png) · 38s
 
 ![step 5 outcome](steps/S05.png)
 
@@ -189,33 +176,38 @@ Failed requests: ['401 POST https://events.backtrace.io/api/summed-events/submit
 
 **Action:** Continue to the order overview.
 
-**Agent report:** BLOCKED at mission step 6 (continue to order overview). Logged in as problem_user earlier and reached /checkout-step-one.html (Checkout: Your Information). First Name shows "Tester". Last Name field [4] shows value="" even though 7 type actions and 1 click on it reported ok. Clicking Continue shows "Error: Last Name is required", so the page never reached the order overview. Zip/Postal Code [5] is also empty. Cart badge shows 2. I did not fill Zip or any other field, since that is outside this step. The Last Name input may be not accepting typed text on this page, or the typing may be going elsewhere. Needs a manual check or a fix before this step can complete.
+**Agent report:** Blocked: I couldn't get to the order overview. This looks like a bug on the page.
 
-**Agent actions (9):**
+1. I typed "Tester" into the Last Name field. The action was reported ok.
+2. I clicked "Continue". The page stayed on /checkout-step-one.html and showed "Error: Last Name is required".
 
-- 1. click [7] "Continue" -> ok; now at /checkout-step-one.html
-- 2. type [4] "Last Name" text="Tester" -> ok; now at /checkout-step-one.html
-- 3. type [4] "Last Name" text="Tester" -> ok; now at /checkout-step-one.html
-- 4. type [4] "Last Name" text="Tester" -> ok; now at /checkout-step-one.html
-- 5. click [4] "Last Name" -> ok; now at /checkout-step-one.html
-- 6. type [4] "Last Name" text="Tester" -> ok; now at /checkout-step-one.html
-- 7. type [4] "Last Name" text="Tester" -> ok; now at /checkout-step-one.html
-- 8. type [4] "Last Name" text="Tester" -> ok; now at /checkout-step-one.html
+What the form shows now:
+- First Name: "Tester"
+- Last Name: empty
+- Zip/Postal Code: empty
+
+The text I typed into Last Name ended up in First Name instead. The Zip/Postal Code field is also empty. Cart badge: 2. I didn't continue past the error.
+
+**Agent actions (3):**
+
+- 1. type [4] "Last Name" text="Tester" -> ok; now at /checkout-step-one.html
+- 2. click [7] "Continue" -> ok; now at /checkout-step-one.html
 
 **Pages visited:** /checkout-step-one.html
 
 | Check | Expected | Observed | Result |
 |---|---|---|---|
-| F5 | After typing First Name, Last Name and Postal Code, each field keeps the typed value, and Continue proceeds to the order overview. Step 6 assumes step 5 entered Last Name "User". | Page facts: first-name = "Tester", last-name = "", postal-code = "". The URL is still /checkout-step-one.html and the error "Error: Last Name is required" is shown. The Last Name value was not kept, and the page did not advance. | ❌ fail |
-| F6 | The order overview shows the cart items, item total = sum of prices, and total = item total + tax. | The overview was never reached (URL is still checkout-step-one, items list is empty in page facts). Nothing about the overview can be verified. | ⚠️ unsure |
-| C3 | The error message describes the real problem. | The message "Error: Last Name is required" matches the page state, where the Last Name field is empty. The message is accurate for the state shown, though the agent reports it typed a value that did not persist. | ✅ pass |
+| F5 | Checkout accepts First Name 'Test', Last Name 'User', Postal Code '12345'. Each field keeps exactly what was typed, and Continue leads to the order overview. | Still on /checkout-step-one.html with 'Error: Last Name is required'. Field values: first-name='Tester', last-name='', postal-code=''. None of the three fields holds the required test data. Last Name and Postal Code are empty, and First Name holds 'Tester', not 'Test'. | ❌ fail |
+| F6 | The overview shows the same items as the cart, item total = sum of item prices, and total = item total + tax. | The overview was never reached (the URL is still checkout-step-one.html and no items are shown), so the totals could not be checked. | ⚠️ unsure |
+| F3 | Cart badge equals the number of items in the cart (2). | cart_badge = '2'. | ✅ pass |
+| C3 | The error message describes the real problem. | 'Error: Last Name is required' matches the actual field state: last-name is empty. But the real cause seems to be that the input went into the wrong field, so the message correctly reports the symptom and does not explain the cause. | ✅ pass |
 | C5 | No unexpected console errors or failed network requests | 0 console entries, 0 failed requests | ✅ pass |
 
-- **Finding S6-F5-1** (failure, blocker): Last Name not kept on checkout step one; Continue blocked with 'Last Name is required'. Observed: After the agent reported typing into Last Name, the field value is empty. Continue shows 'Error: Last Name is required' and stays on /checkout-step-one.html. Postal Code is also empty. First Name shows 'Tester'. The cart badge still shows 2.
+- **Finding S6-F5-1** (failure, blocker): Checkout information form does not keep typed values: Last Name and Postal Code empty, First Name holds the wrong value, checkout blocked. Observed: first-name='Tester', last-name='', postal-code=''. The page stays on /checkout-step-one.html with 'Error: Last Name is required'. No console errors and no failed requests. The agent reports that text typed into Last Name appeared in First Name. The page facts are consistent with this (Last Name empty, First Name holds the typed value) but cannot prove it on their own.
 
-- **Finding S6-F5-2** (suspicious, observation): Postal Code left empty before Continue (step 5 incomplete in this run). Observed: The agent did not fill Postal Code, citing it as outside the step. Continue was clicked with Last Name and Postal Code both empty, so the blocked result cannot be attributed to Last Name alone.
+- **Finding S6-F5-2** (suspicious, observation): Agent deviated from the mission test data (typed 'Tester' into Last Name instead of 'User'). Observed: The agent report says it typed 'Tester' into Last Name. The Postal Code is also empty, and the report does not say whether '12345' was ever entered. The test data was not followed exactly, which weakens the reproduction, but the empty Last Name and Postal Code fields still show the form is not keeping input.
 
-<a id="step-6-shot"></a>**Outcome** - [steps/S06.png](steps/S06.png) · 74s
+<a id="step-6-shot"></a>**Outcome** - [steps/S06.png](steps/S06.png) · 46s
 
 ![step 6 outcome](steps/S06.png)
 
@@ -228,37 +220,25 @@ Failed requests: ['401 POST https://events.backtrace.io/api/summed-events/submit
 
 **Action:** Finish the order.
 
-**Agent report:** (no final report: the agent ran out of actions or could not continue) Last actions: 9. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html | 10. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html | 11. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html | 12. type [5] "Zip/Postal Code" text="12345" -> ok; now at /checkout-step-one.html
+**Agent report:** I could not finish the order. I was blocked on /checkout-step-one.html ("Checkout: Your Information"), cart badge 2. I typed "User" into the Last Name field (element [4]) and the tool said ok. The page then showed First Name = "User" and Last Name = "" (empty), with Zip/Postal Code also empty. The error "Error: Last Name is required" is showing. It looks like text typed into Last Name lands in First Name, which matches the known problem_user bug, so Continue can't get past this page. I did not reach the overview page and did not click Finish. No order was placed.
 
-**Agent actions (12):**
+**Agent actions (2):**
 
 - 1. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
-- 2. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
-- 3. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
-- 4. click [4] "Last Name" -> ok; now at /checkout-step-one.html
-- 5. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
-- 6. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
-- 7. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
-- 8. click [6] "Dismiss error" -> ok; now at /checkout-step-one.html
-- 9. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
-- 10. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
-- 11. type [4] "Last Name" text="User" -> ok; now at /checkout-step-one.html
-- 12. type [5] "Zip/Postal Code" text="12345" -> ok; now at /checkout-step-one.html
 
 **Pages visited:** /checkout-step-one.html
 
 | Check | Expected | Observed | Result |
 |---|---|---|---|
-| F5 | Checkout accepts First Name 'Test', Last Name 'User', Postal Code '12345', and each field keeps exactly what was typed. | Page facts show first-name = 'User' (not 'Test'), last-name = '' (empty), postal-code = '12345'. The 'User' value landed in the First Name field, and Last Name is empty despite the agent's report of 'type [4] Last Name text=User -> ok' being repeated three times. First Name and Last Name values are swapped or misplaced; the step never reached a valid, complete entry. | ❌ fail |
-| C3 | If the form is invalid, any error message accurately describes the real problem. | error_message is null and no error text is visible. No submit was attempted in this step, so there is no error that should or should not appear yet. Cannot judge. | ⚠️ unsure |
+| F7 | Clicking Finish shows an order confirmation (checkout-complete page) and the cart is empty afterwards (no badge). | The page is still /checkout-step-one.html ('Checkout: Your Information') with the error 'Error: Last Name is required'. The cart badge still shows 2. The overview and Finish were never reached, so there is no order confirmation. | ❌ fail |
+| F5 | Each checkout field keeps exactly what was typed (First Name 'Test', Last Name 'User', Postal Code '12345'), and valid input is accepted. | Field values per page facts: first-name='User', last-name='', postal-code=''. The agent says it typed 'User' into Last Name. The value 'User' shows up in First Name and Last Name is empty. First Name no longer holds 'Test', and Postal Code is empty. The form is rejected with 'Last Name is required'. | ❌ fail |
 | C5 | No unexpected console errors or failed network requests | 0 console entries, 0 failed requests | ✅ pass |
-| STEP | the agent completes the step | agent did not finish.  | ❌ fail |
 
-- **Finding S7-F5-1** (failure, major): Last Name typed value lands in First Name; Last Name stays empty on checkout step one. Observed: After repeated 'Last Name' typing attempts, page facts show first-name = 'User', last-name = '', postal-code = '12345'. The agent's report says each Last Name type returned 'ok', but the page state contradicts this. First Name was never set to 'Test'. The run stopped at action 12 before Continue, so step 6 and step 7 were not reached.
+- **Finding S7-F7-1** (failure, blocker): Order cannot be finished: checkout stuck on 'Your Information' page. Observed: After step 7 the URL is still https://www.saucedemo.com/checkout-step-one.html, the error 'Error: Last Name is required' is showing, and the cart badge is 2. No overview page, no Finish, no confirmation.
 
-- **Finding S7-F5-2** (unexpected, observation): Agent report contradicts page facts on field values. Observed: Agent reported 'type [4] Last Name text=User -> ok' three times and 'type [5] Postal Code 12345 -> ok', yet page facts show the 'User' text in first-name and last-name empty. Per the rules, page facts are trusted over the agent report.
+- **Finding S7-F5-2** (failure, blocker): Text typed into Last Name ends up in First Name; Last Name stays empty. Observed: Page facts show first-name='User', last-name='' and postal-code=''. The agent reports it typed 'User' into the Last Name element. The value moved to First Name and overwrote 'Test', and the required-field error blocks Continue. Postal Code is also empty. The facts don't show whether 12345 was ever entered.
 
-<a id="step-7-shot"></a>**Outcome** - [steps/S07.png](steps/S07.png) · 101s
+<a id="step-7-shot"></a>**Outcome** - [steps/S07.png](steps/S07.png) · 33s
 
 ![step 7 outcome](steps/S07.png)
 
@@ -271,41 +251,19 @@ Failed requests: ['401 POST https://events.backtrace.io/api/summed-events/submit
 
 **Action:** Free exploration: try other paths inside this mission's theme (the AI chooses)
 
-**Agent report:** PATH: Sort dropdown, "Price (low to high)". I selected "Price (low to high)" in the sort select (element [3]) twice. Both selects returned ok and the page stayed at /inventory.html. The select's current value in the element list is value="az". The product order on the page is Sauce Labs Backpack $29.99, Sauce Labs Bike Light $9.99, Sauce Labs Bolt T-Shirt $15.99, Sauce Labs Fleece Jacket, Sauce Labs Onesie, Test.allTheThings() T-Shirt (Red). That is alphabetical (A to Z) order, not price ascending, which would start with $9.99. Likely bug: the price sort is not applied.
+**Agent report:** (no final report: the agent ran out of actions or could not continue) Last actions: 1. type [4] "Last Name" text="Tester" -> ok; now at /checkout-step-one.html | 2. (your answer was not valid JSON for the action format) | 3. (your answer was not valid JSON for the action format) | 4. (your answer was not valid JSON for the action format)
 
-PATH: Product detail page and back navigation, Sauce Labs Backpack. I clicked the "Sauce Labs Backpack" product link (element [3]) and landed on /inventory-item.html. I clicked "Add to cart" (element [4]), which returned ok, then clicked "Back to products" (element [3]) and landed on /inventory.html. I did not capture the detail page's name, price or description text in my action log, so I cannot confirm them against the list entry ("Sauce Labs Backpack", $29.99, "carry.allTheThings() with the sleek, streamlined Sly Pack...").
+**Agent actions (1):**
 
-PATH: Cart badge after add-to-cart. After the Backpack add-to-cart and return to the list, the cart badge reads "2". The list shows "Remove" buttons for Sauce Labs Backpack and Sauce Labs Bike Light, which matches two items. I did not record the badge value before the add, so I cannot say whether it incremented by exactly 1.
+- 1. type [4] "Last Name" text="Tester" -> ok; now at /checkout-step-one.html
 
-PATH: Checkout step one, then cancel. On /checkout-step-one.html I typed "Tester" into the Last Name field (element [4]), clicked "Dismiss error" (element [6]), which returned ok and kept me on the same page, and then clicked "Cancel" (element [6]), which took me to /cart.html. I did not capture the error text itself, so I cannot quote what the error said.
-
-Note: The first three actions of the session are not in the action list I was given, so this report only covers actions 4 to 11. I stopped at 11 of 12 actions and did not use the last one.
-
-**Agent actions (12):**
-
-- 1. click [7] "Continue" -> ok; now at /checkout-step-one.html
-- 2. type [4] "Last Name" text="Tester" -> ok; now at /checkout-step-one.html
-- 3. type [4] "Last Name" text="Tester" -> ok; now at /checkout-step-one.html
-- 4. type [4] "Last Name" text="Tester" -> ok; now at /checkout-step-one.html
-- 5. click [6] "Dismiss error" -> ok; now at /checkout-step-one.html
-- 6. click [6] "Cancel" -> ok; now at /cart.html
-- 7. click [3] "Sauce Labs Backpack" -> ok; now at /inventory-item.html
-- 8. click [4] "Add to cart" -> ok; now at /inventory-item.html
-- 9. click [3] "Back to products" -> ok; now at /inventory.html
-- 10. select [3] "Name (A to Z) Name (Z to A) Price (low to high) Price (high " text="Price (low to high)" -> ok; now at /inventory.html
-- 11. select [3] "Name (A to Z) Name (Z to A) Price (low to high) Price (high " text="Price (low to high)" -> ok; now at /inventory.html
-
-**Pages visited:** /checkout-step-one.html, /cart.html, /inventory-item.html, /inventory.html
+**Pages visited:** /checkout-step-one.html
 
 | Check | Expected | Observed | Result |
 |---|---|---|---|
-| F3 | Cart badge count equals the number of items actually in the cart | Page facts show cart badge '2'. Two items show 'Remove' (Sauce Labs Backpack and Sauce Labs Bike Light), and no other item shows 'Remove'. The cart contents themselves were not read in this step, so the match is inferred from the product list. | ✅ pass |
-| C1 | Product name, image, description and price match between the list and the product detail page | Page facts were read on /inventory.html only. The agent report says it opened the Backpack detail page but did not record its name, price or description, and no detail-page facts were captured. Nothing can be compared. | ⚠️ unsure |
-| C2 | Navigation and labelled controls do what their label says: the product link opens that product, 'Back to products' returns to the list, and the sort option produces the order its label names | The agent report says the Backpack link opened /inventory-item.html and 'Back to products' returned to /inventory.html, but no page facts were captured for the detail page. On the list, the products appear in A to Z order (Backpack, Bike Light, Bolt, Fleece Jacket, Onesie, Test.allTheThings), not price ascending as the 'Price (low to high)' label would require. The current sort selection is only stated in the agent report, not in the page facts. | ⚠️ unsure |
+| - | the judge returns checks | judge failed: claude failed: {"duration_api_ms":0,"stop_reason":"stop_sequence","session_id":"07eeb4b3-d03b-4f89-b447-592b2e78e0e5","total_cost_usd":0,"usage":{"output_tokens_details":{"thinking_tokens":0},"input_tokens":0,"cache_creation_input_tokens":0,"cache_read_input_tokens":0,"output_tokens":0,"server_tool_ | ⚠️ unsure |
 | C5 | No unexpected console errors or failed network requests | 0 console entries, 0 failed requests | ✅ pass |
 
-- **Finding S8-C2-1** (suspicious, minor): Price (low to high) sort does not reorder products. Observed: After the agent selected 'Price (low to high)' twice, the page stayed on /inventory.html and the list is still in A to Z order, starting with Sauce Labs Backpack $29.99 then Sauce Labs Bike Light $9.99. The agent report says the sort select's value is 'az'. The page facts do not show which option is selected.
-
-<a id="step-8-shot"></a>**Outcome** - [steps/S08.png](steps/S08.png) · 110s
+<a id="step-8-shot"></a>**Outcome** - [steps/S08.png](steps/S08.png) · 27s
 
 ![step 8 outcome](steps/S08.png)

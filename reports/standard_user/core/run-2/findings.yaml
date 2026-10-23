@@ -1,14 +1,28 @@
-- quality_ref: F5
-  title: Continue button not confirmed by page facts
+- quality_ref: F6
+  title: 'Step 6 not executed: the agent never clicked Continue, so the order overview was not verified'
   type: suspicious
-  oracle: Claims
-  expected: Checkout step one shows Cancel and Continue buttons, as the agent report states.
-  observed: visible_text lists 'Cancel' but no 'Continue'. The agent report says both buttons are present. Page facts are
-    reliable, so the Continue button is unconfirmed. It may be an input[type=submit] whose value does not appear in innerText,
-    which would be a limitation of the facts rather than an app fault.
+  oracle: Purpose
+  expected: 'Clicking Continue on Checkout: Your Information leads to the order overview (checkout-step-two).'
+  observed: 'The agent''s own safety check blocked the click. The page stays on checkout-step-one with the valid form filled
+    in and no app error, console error or network failure. This is a test-execution gap, not evidence of an app defect. F6
+    still needs to be checked: retry the step once (TS-003).'
+  confidence: high
+  suggested_severity: observation
+  id: S6-F6-1
+  step: 6
+  evidence: steps/S06.png
+  technical_signal: none
+- quality_ref: F7
+  title: Unexpected 'Generate PDF order' button on the order confirmation page
+  type: suspicious
+  oracle: Comparable products / History
+  expected: A standard SauceDemo confirmation page has only a 'Back Home' action after the thank-you message
+  observed: 'The page facts show a ''Generate PDF order'' button next to ''Back Home''. It was not clicked, so what it does
+    is unknown. Under TS-004 this is suspicious, not a failure: there was no console or network error and F7 still holds.
+    A human should decide whether this button is intended and whether to test it.'
   confidence: low
   suggested_severity: observation
-  id: S4-F5-1
-  step: 4
-  evidence: steps/S04.png
+  id: S7-F7-1
+  step: 7
+  evidence: steps/S07.png
   technical_signal: none

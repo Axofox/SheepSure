@@ -1,1 +1,13 @@
-[]
+- quality_ref: F4
+  title: Cart offers no way to change item quantity
+  type: flow-gap
+  oracle: Comparable products
+  expected: In a typical online shop the cart lets the shopper change the quantity of an item
+  observed: Quantity is shown as static text "1" for each item. The only controls are Remove, Continue Shopping and Checkout.
+    quality-definition.md does not require a quantity control
+  confidence: low
+  suggested_severity: observation
+  id: S3-F4-1
+  step: 3
+  evidence: steps/S03.png
+  technical_signal: none

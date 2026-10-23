@@ -1,66 +1,54 @@
 - quality_ref: C1
-  title: All product images share one src that looks like a 404 placeholder
+  title: All products on the inventory page show the same placeholder image (sl-404)
   type: suspicious
-  oracle: 'Product consistency: the same product should show its own image, and a shopper should see a real picture.'
-  expected: Each product has its own distinct image that loads.
-  observed: All six products on the inventory page have image src '/assets/sl-404-Cq1a9k9X.jpg', which contains '404'. The
-    page facts do not say whether the image loaded.
-  confidence: medium
-  suggested_severity: observation
+  oracle: Product consistency
+  expected: Each product shows its own matching image (backpack, bike light, t-shirt, and so on)
+  observed: All 6 items (Sauce Labs Backpack, Bike Light, Bolt T-Shirt, Fleece Jacket, Onesie, Test.allTheThings() T-Shirt
+    (Red)) have image src '/assets/sl-404-Cq1a9k9X.jpg'. No console or network error is linked to this; the only errors were
+    the 401s from backtrace.io telemetry. The agent report did not check images.
+  confidence: high
+  suggested_severity: minor
   id: S1-C1-1
   step: 1
   evidence: steps/S01.png
   technical_signal: console/network entries in this step
 - quality_ref: C1
-  title: All six products point to the same image file, named 'sl-404'
+  title: All product images on the inventory page show the same 404 placeholder image
   type: suspicious
-  oracle: Product consistency / Claims
-  expected: Each product shows its own image that matches its name and description
-  observed: Every product on the inventory page has image src /assets/sl-404-Cq1a9k9X.jpg. The file name suggests a 404 or
-    placeholder asset. Rendering is not visible in the page facts.
-  confidence: medium
+  oracle: Product consistency
+  expected: Each product shows its own matching product image (e.g. a backpack for Sauce Labs Backpack, a bike light for Sauce
+    Labs Bike Light)
+  observed: All 6 products have image '/assets/sl-404-Cq1a9k9X.jpg'. There were no console errors and no failed network requests.
+    The agent report said 'Nothing looked wrong on this page', which the page facts contradict.
+  confidence: high
   suggested_severity: minor
   id: S2-C1-1
   step: 2
   evidence: steps/S02.png
-  technical_signal: console/network entries in this step
+  technical_signal: none
 - quality_ref: F5
-  title: Checkout step one loses Last Name and Postal Code input; checkout cannot continue
+  title: Typing in Last Name writes into First Name and overwrites it; Last Name stays empty
   type: failure
-  oracle: Claims; Purpose
-  expected: After entering First Name Test, Last Name User and Postal Code 12345, each field keeps the typed value and the
-    shopper can continue to the overview.
-  observed: Only First Name holds "Test". Last Name and Postal Code read back as empty on /checkout-step-one.html, with no
-    error message. The agent reported typing "User" into Last Name and got ok, but the page does not show it. The page did
-    not advance to the overview.
-  confidence: medium
+  oracle: 'Claims / User expectations: each labelled field should keep what the user typed into it'
+  expected: first-name = "Test", last-name = "User" after typing into each field
+  observed: first-name = "User", last-name = "" (runner page facts, which match the agent report). No console errors and no
+    failed network requests, so this is a silent client-side input bug. The cart badge still shows 2.
+  confidence: high
   suggested_severity: blocker
   id: S5-F5-1
   step: 5
   evidence: steps/S05.png
   technical_signal: none
 - quality_ref: F5
-  title: Agent repeated the same typing actions after apparent success, and the run ended without a final report
-  type: suspicious
-  oracle: History
-  expected: Each field is typed at most once, and any failure is reported after one retry (TS-003).
-  observed: The agent typed First Name and Last Name again in actions 10 and 11 and 12 without confirming the values were
-    kept, then ran out of actions with no final report. It is unclear whether the empty fields come from the app or from how
-    the browsing tool enters text.
-  confidence: medium
-  suggested_severity: observation
-  id: S5-F5-2
-  step: 5
-  evidence: steps/S05.png
-  technical_signal: none
-- quality_ref: F5
-  title: Last Name not kept on checkout step one; Continue blocked with 'Last Name is required'
+  title: 'Checkout information form does not keep typed values: Last Name and Postal Code empty, First Name holds the wrong
+    value, checkout blocked'
   type: failure
-  oracle: Claims (Continue with valid info should proceed); User expectations (a typed name should stay in the field)
-  expected: Typed Last Name (e.g. "User") remains in the Last Name field, and Continue moves to the order overview.
-  observed: 'After the agent reported typing into Last Name, the field value is empty. Continue shows ''Error: Last Name is
-    required'' and stays on /checkout-step-one.html. Postal Code is also empty. First Name shows ''Tester''. The cart badge
-    still shows 2.'
+  oracle: 'Purpose / Claims: the user cannot complete the order with valid customer information'
+  expected: first-name='Test', last-name='User', postal-code='12345', then Continue opens the order overview
+  observed: 'first-name=''Tester'', last-name='''', postal-code=''''. The page stays on /checkout-step-one.html with ''Error:
+    Last Name is required''. No console errors and no failed requests. The agent reports that text typed into Last Name appeared
+    in First Name. The page facts are consistent with this (Last Name empty, First Name holds the typed value) but cannot
+    prove it on their own.'
   confidence: high
   suggested_severity: blocker
   id: S6-F5-1
@@ -68,58 +56,43 @@
   evidence: steps/S06.png
   technical_signal: none
 - quality_ref: F5
-  title: Postal Code left empty before Continue (step 5 incomplete in this run)
+  title: Agent deviated from the mission test data (typed 'Tester' into Last Name instead of 'User')
   type: suspicious
-  oracle: Purpose (the user must be able to complete the order)
-  expected: Step 5 enters First Name, Last Name and Postal Code before Continue.
-  observed: The agent did not fill Postal Code, citing it as outside the step. Continue was clicked with Last Name and Postal
-    Code both empty, so the blocked result cannot be attributed to Last Name alone.
+  oracle: 'Mission spec (step 5 data: Test / User / 12345)'
+  expected: The agent types Last Name 'User' and verifies all three field values after typing (TS-002)
+  observed: The agent report says it typed 'Tester' into Last Name. The Postal Code is also empty, and the report does not
+    say whether '12345' was ever entered. The test data was not followed exactly, which weakens the reproduction, but the
+    empty Last Name and Postal Code fields still show the form is not keeping input.
   confidence: medium
   suggested_severity: observation
   id: S6-F5-2
   step: 6
   evidence: steps/S06.png
   technical_signal: none
-- quality_ref: F5
-  title: Last Name typed value lands in First Name; Last Name stays empty on checkout step one
+- quality_ref: F7
+  title: 'Order cannot be finished: checkout stuck on ''Your Information'' page'
   type: failure
-  oracle: Claims (the field labelled Last Name should receive the Last Name input); User expectations (typed input appears
-    in the field it was typed into)
-  expected: First Name = 'Test', Last Name = 'User', Postal Code = '12345', each kept exactly as typed.
-  observed: After repeated 'Last Name' typing attempts, page facts show first-name = 'User', last-name = '', postal-code =
-    '12345'. The agent's report says each Last Name type returned 'ok', but the page state contradicts this. First Name was
-    never set to 'Test'. The run stopped at action 12 before Continue, so step 6 and step 7 were not reached.
+  oracle: Purpose
+  expected: The shopper reaches the overview, clicks Finish and sees an order confirmation. The cart is empty afterwards.
+  observed: 'After step 7 the URL is still https://www.saucedemo.com/checkout-step-one.html, the error ''Error: Last Name
+    is required'' is showing, and the cart badge is 2. No overview page, no Finish, no confirmation.'
   confidence: high
-  suggested_severity: major
-  id: S7-F5-1
+  suggested_severity: blocker
+  id: S7-F7-1
   step: 7
   evidence: steps/S07.png
   technical_signal: none
 - quality_ref: F5
-  title: Agent report contradicts page facts on field values
-  type: unexpected
-  oracle: 'History / Claims: the agent''s report of ''ok'' does not match the read-back field state'
-  expected: Agent report matches the field values read back from the page.
-  observed: Agent reported 'type [4] Last Name text=User -> ok' three times and 'type [5] Postal Code 12345 -> ok', yet page
-    facts show the 'User' text in first-name and last-name empty. Per the rules, page facts are trusted over the agent report.
+  title: Text typed into Last Name ends up in First Name; Last Name stays empty
+  type: failure
+  oracle: Claims
+  expected: Typing 'User' into Last Name sets last-name='User', and First Name keeps 'Test'.
+  observed: Page facts show first-name='User', last-name='' and postal-code=''. The agent reports it typed 'User' into the
+    Last Name element. The value moved to First Name and overwrote 'Test', and the required-field error blocks Continue. Postal
+    Code is also empty. The facts don't show whether 12345 was ever entered.
   confidence: high
-  suggested_severity: observation
+  suggested_severity: blocker
   id: S7-F5-2
   step: 7
   evidence: steps/S07.png
-  technical_signal: none
-- quality_ref: C2
-  title: Price (low to high) sort does not reorder products
-  type: suspicious
-  oracle: 'Claims: the app should do what its labels say'
-  expected: After choosing 'Price (low to high)', products are listed from cheapest to most expensive, starting with Sauce
-    Labs Onesie at $7.99 and Sauce Labs Bike Light at $9.99
-  observed: After the agent selected 'Price (low to high)' twice, the page stayed on /inventory.html and the list is still
-    in A to Z order, starting with Sauce Labs Backpack $29.99 then Sauce Labs Bike Light $9.99. The agent report says the
-    sort select's value is 'az'. The page facts do not show which option is selected.
-  confidence: medium
-  suggested_severity: minor
-  id: S8-C2-1
-  step: 8
-  evidence: steps/S08.png
   technical_signal: none
