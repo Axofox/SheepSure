@@ -25,7 +25,7 @@
 8. **Replay what the AI did as a deterministic test, then compare.** After the runs are compared, turn each run into a test script (Playwright, or manual steps) that repeats **exactly what the AI did**: the same actions, in the same order, with the same typed values, whatever the AI concluded. Include the passed, failed and suspicious checks.
    - **Compare:** run the script and put its results next to the AI's. If they match, the AI's observation is reproducible. If they differ, the AI misread the page, or the path was unstable. This separates AI error from app behaviour. A human decides in the unclear cases.
    - **What it needs:** the runner must record a stable selector for every action (visible label, role or test id), because the element numbers the agent sees change on every page.
-   - **What it does not show:** a replay only covers what the AI did. To find what the AI missed, compare against an independent baseline too: `scripted_run.py` (no AI, fixed F1–F7 checks) and a human exploratory pass.
+   - **What it does not show:** a replay only covers what the AI did. To find what the AI missed, compare against an independent check too: a human exploratory pass, or fixed checks written by a human for the expectations in question.
    - **Review:** a human checks each test against `quality-definition.md` before it counts, since a test with the wrong expectation proves nothing.
 
 ## Toward less repetitive manual QA
